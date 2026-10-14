@@ -48,7 +48,7 @@
   I.wifi = p('<path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 19.5h.01"/>');
   // availability crates (report buttons)
   const crate = (fill) => `<svg viewBox="0 0 40 32" width="40" height="32" aria-hidden="true"><path d="M3 12h34l-3 18H6z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M5 19h30M6.5 25h27" stroke="currentColor" stroke-width="1.6" opacity=".55"/>${fill}</svg>`;
-  const ban = (x, y, r) => `<path transform="translate(${x} ${y}) rotate(${r})" d="M0 0c4 5 12 5 16 0" fill="none" stroke="#FFB020" stroke-width="4" stroke-linecap="round"/>`;
+  const ban = (x, y, r) => `<path transform="translate(${x} ${y}) rotate(${r})" d="M0 0c4 5 12 5 16 0" fill="none" style="stroke:var(--accent)" stroke-width="4" stroke-linecap="round"/>`;
   I.crateMany = crate(ban(5, 7, -8) + ban(14, 3, 6) + ban(21, 8, -4) + ban(10, 10, 4));
   I.crateLow = crate(ban(13, 9, 8));
   I.crateNone = crate('<path d="M14 4l12 6M26 4l-12 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>');
@@ -56,8 +56,8 @@
 
   // ---------- App icon (concept 1: "Kassi-ovi" — bag whose handle loops into a go-arrow) ----------
   FTG.appIcon = (size = 38, variant = 'A') => {
-    const v = { A: ['#C21E56', '#FFFFFF', '#FFB020'], B: ['#3B34C8', '#FFFFFF', '#C8F25A'], C: ['#B83A13', '#FFFFFF', '#F2C14E'] }[variant];
-    return `<svg viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true"><rect width="64" height="64" rx="15" fill="${v[0]}"/><path d="M17 26h30l-2.6 24.5a3 3 0 0 1-3 2.5H22.6a3 3 0 0 1-3-2.5z" fill="${v[1]}"/><path d="M25 26v-4a7 7 0 0 1 13.4-2.8" fill="none" stroke="${v[1]}" stroke-width="4.5" stroke-linecap="round"/><path d="m35.5 14 3.6 5.6-6 2.4" fill="none" stroke="${v[1]}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="39" r="5" fill="${v[2]}"/></svg>`;
+    const v = { A: ['var(--active)', '#FFFFFF', 'var(--primarySoft)'], B: ['#3B34C8', '#FFFFFF', '#C8F25A'], C: ['#B83A13', '#FFFFFF', '#F2C14E'] }[variant];
+    return `<svg viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true"><rect width="64" height="64" rx="15" style="fill:${v[0]}"/><path d="M17 26h30l-2.6 24.5a3 3 0 0 1-3 2.5H22.6a3 3 0 0 1-3-2.5z" fill="${v[1]}"/><path d="M25 26v-4a7 7 0 0 1 13.4-2.8" fill="none" stroke="${v[1]}" stroke-width="4.5" stroke-linecap="round"/><path d="m35.5 14 3.6 5.6-6 2.4" fill="none" stroke="${v[1]}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="39" r="5" style="fill:${v[2]}"/></svg>`;
   };
 
   // ---------- Seeded random ----------
@@ -158,10 +158,14 @@
       return wrap('#E6E1F2', '#D3CAE6', b, id);
     },
   };
-  FTG.art = (key, seed) => { const id = 'a' + (uid++); const f = ART[key] || ART.groceries; return f(rng(seed || key), id); };
+  // Real photos (flutter/demos veggieseasons, BSD-3) replace the earlier drawn illustrations. Legacy art keys map to photo files.
+  const PHOTO = { bread: 'marjapuoti', pastry: 'sitrus', bananas: 'aurinko', produce: 'juures', meals: 'juures', groceries: 'pihlaja', sushi: 'sieni', cafe: 'lehti', apples: 'omenat' };
+  FTG.photoSrc = (key) => { const f = PHOTO[key] || key; return (window.FTG_PHOTOS && window.FTG_PHOTOS[f]) || ('v2/photos/' + f + '.jpg'); };
+  FTG.art = (key) => `<img class="art" src="${FTG.photoSrc(key)}" alt="" loading="lazy">`;
+  FTG.drawnArt = (key, seed) => { const id = 'a' + (uid++); const f = ART[key] || ART.groceries; return f(rng(seed || key), id); };
 
   // ---------- Empty-state illustration: an empty crate with a waiting bell ----------
-  FTG.emptyArt = () => `<svg class="ill" viewBox="0 0 132 112" aria-hidden="true"><ellipse cx="66" cy="102" rx="52" ry="7" fill="#DEDAE6"/><path d="M18 46h96l-8 52H26z" fill="#FFF1D6" stroke="#241A3A" stroke-width="3" stroke-linejoin="round"/><path d="M22 66h88M25 82h82" stroke="#241A3A" stroke-width="2" opacity=".25"/><circle cx="98" cy="28" r="18" fill="#C21E56"/><path d="M91 33v-6a7 7 0 0 1 14 0v6l1.5 2h-17z" fill="#fff"/><path d="M96 38.5h4" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M40 40c4-8 10-10 16-8" stroke="#B9B3C6" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="2 6"/></svg>`;
+  FTG.emptyArt = () => `<svg class="ill" viewBox="0 0 132 112" aria-hidden="true"><ellipse cx="66" cy="102" rx="52" ry="7" style="fill:var(--border)"/><path d="M18 46h96l-8 52H26z" style="fill:var(--primarySoft);stroke:var(--textPrimary)" stroke-width="3" stroke-linejoin="round"/><path d="M22 66h88M25 82h82" style="stroke:var(--textPrimary)" stroke-width="2" opacity=".25"/><circle cx="98" cy="28" r="18" style="fill:var(--active)"/><path d="M91 33v-6a7 7 0 0 1 14 0v6l1.5 2h-17z" fill="#fff"/><path d="M96 38.5h4" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M40 40c4-8 10-10 16-8" stroke="#B9B3C6" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="2 6"/></svg>`;
 
   // ---------- Simulated map ----------
   FTG.mapSvg = (pins, opts = {}) => {
@@ -173,15 +177,15 @@
     for (let i = 0; i < 9; i++) s += `<path d="M0 ${90 + i * 46} L${W} ${70 + i * 46}" stroke="#FFFFFF" stroke-width="${i % 3 ? 5 : 9}"/>`;
     for (let i = 0; i < 7; i++) s += `<path d="M${30 + i * 56} 60 L${50 + i * 56} ${H}" stroke="#FFFFFF" stroke-width="${i % 3 ? 5 : 9}"/>`;
     s += `<path d="M0 230 C120 210 220 260 ${W} 220" stroke="#FFF6DD" stroke-width="12" fill="none"/>`;
-    if (opts.radius) s += `<circle cx="${opts.cx || 180}" cy="${opts.cy || 230}" r="${opts.radius}" fill="rgba(194,30,86,.07)" stroke="#C21E56" stroke-width="1.5" stroke-dasharray="5 5"/>`;
+    if (opts.radius) s += `<circle cx="${opts.cx || 180}" cy="${opts.cy || 230}" r="${opts.radius}" style="fill:var(--primarySoft);fill-opacity:.55;stroke:var(--active)" stroke-width="1.5" stroke-dasharray="5 5"/>`;
     if (opts.me) s += `<circle cx="${opts.cx || 180}" cy="${opts.cy || 230}" r="14" fill="rgba(45,107,224,.18)"/><circle cx="${opts.cx || 180}" cy="${opts.cy || 230}" r="7" fill="#2D6BE0" stroke="#fff" stroke-width="3"/>`;
-    if (opts.home) s += `<g transform="translate(${(opts.cx || 180) - 12} ${(opts.cy || 230) - 12})"><rect width="24" height="24" rx="8" fill="#241A3A"/><path d="M6 12l6-5 6 5v6h-4v-4h-4v4H6z" fill="#fff"/></g>`;
+    if (opts.home) s += `<g transform="translate(${(opts.cx || 180) - 12} ${(opts.cy || 230) - 12})"><rect width="24" height="24" rx="8" style="fill:var(--textPrimary)"/><path d="M6 12l6-5 6 5v6h-4v-4h-4v4H6z" fill="#fff"/></g>`;
     pins.forEach(pn => {
       const x = pn.x * W, y = pn.y * H, sel = pn.selected;
-      const fill = pn.mode === 'WALK_IN' ? 'url(#hatchpin)' : (pn.dim ? '#B9B3C6' : '#C21E56');
-      s += `<g class="pin" data-action="mapPin" data-arg="${pn.id}" transform="translate(${x} ${y}) scale(${sel ? 1.18 : 1})"><ellipse cx="0" cy="2" rx="9" ry="3" fill="rgba(0,0,0,.18)"/><path d="M0 0 C-14 -16 -18 -24 -18 -32 a18 18 0 0 1 36 0 c0 8 -4 16 -18 32z" fill="${fill}" stroke="${sel ? '#241A3A' : '#fff'}" stroke-width="${sel ? 3 : 2.5}"/><text x="0" y="-27" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="12" fill="${pn.mode === 'WALK_IN' ? '#241A3A' : '#fff'}">${pn.label}</text></g>`;
+      const fill = pn.mode === 'WALK_IN' ? 'var(--surface)' : (pn.dim ? '#B8C0C7' : 'var(--active)');
+      s += `<g class="pin" data-action="mapPin" data-arg="${pn.id}" transform="translate(${x} ${y}) scale(${sel ? 1.18 : 1})"><ellipse cx="0" cy="2" rx="9" ry="3" fill="rgba(0,0,0,.18)"/><path d="M0 0 C-14 -16 -18 -24 -18 -32 a18 18 0 0 1 36 0 c0 8 -4 16 -18 32z" style="fill:${fill};stroke:${pn.mode === 'WALK_IN' ? 'var(--badgeText)' : sel ? 'var(--textPrimary)' : '#fff'}" stroke-width="${sel ? 3 : 2.5}" ${pn.mode === 'WALK_IN' ? 'stroke-dasharray="4 3"' : ''}/><text x="0" y="-27" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="700" font-size="12" style="fill:${pn.mode === 'WALK_IN' ? 'var(--badgeText)' : 'var(--onActive)'}">${pn.label}</text></g>`;
     });
-    s += `<defs><pattern id="hatchpin" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#FFB020"/><rect width="4" height="8" fill="#FFC550"/></pattern></defs></svg>`;
+    s += `</svg>`;
     return s;
   };
 
@@ -195,6 +199,6 @@
       if (r() > 0.52) cells.push(`<rect x="${x}" y="${y}" width="1.02" height="1.02"/>`);
     }
     const f = (x, y) => `<rect x="${x}" y="${y}" width="7" height="7" fill="#241A3A"/><rect x="${x + 1}" y="${y + 1}" width="5" height="5" fill="#fff"/><rect x="${x + 2}" y="${y + 2}" width="3" height="3" fill="#241A3A"/>`;
-    return `<svg viewBox="-1 -1 ${n + 2} ${n + 2}" shape-rendering="crispEdges" role="img" aria-label="${FTG.t('sim_qr')}"><rect x="-1" y="-1" width="${n + 2}" height="${n + 2}" fill="#fff"/><g fill="#241A3A">${cells.join('')}</g>${f(0, 0)}${f(n - 7, 0)}${f(0, n - 7)}<rect x="10" y="10" width="5" height="5" rx="1" fill="#C21E56"/></svg>`;
+    return `<svg viewBox="-1 -1 ${n + 2} ${n + 2}" shape-rendering="crispEdges" role="img" aria-label="${FTG.t('sim_qr')}"><rect x="-1" y="-1" width="${n + 2}" height="${n + 2}" fill="#fff"/><g fill="#241A3A">${cells.join('')}</g>${f(0, 0)}${f(n - 7, 0)}${f(0, n - 7)}<rect x="10" y="10" width="5" height="5" rx="1" style="fill:var(--active)"/></svg>`;
   };
 })();

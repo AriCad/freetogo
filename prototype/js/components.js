@@ -39,10 +39,10 @@
   C.photo = (o, store) => {
     if (o.photo && o.photo.kind !== 'none') return FTG.art(o.photo.art, o.id);
     // No photo: calm branded placeholder with store initials, never pretending to be food.
-    return `<svg class="art" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="400" height="250" fill="${store.color}"/><text x="200" y="150" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="84" fill="rgba(255,255,255,.18)">${esc(store.initials)}</text></svg>`;
+    return `<svg class="art" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="400" height="250" style="fill:var(--primarySoft)"/><text x="200" y="150" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="700" font-size="84" style="fill:var(--icon)" opacity=".35">${esc(store.initials)}</text></svg>`;
   };
 
-  C.avatar = (store, cls = '') => `<span class="avatar ${cls}" style="background:${store.color}" aria-hidden="true">${esc(store.initials)}</span>`;
+  C.avatar = (store, cls = '') => `<span class="avatar ${cls}" aria-hidden="true">${esc(store.initials)}</span>`;
 
   C.stars = (v) => { let s = '<span class="stars" aria-hidden="true">'; for (let i = 1; i <= 5; i++) s += `<span style="opacity:${v >= i - .25 ? 1 : .25}">${icon('star')}</span>`; return s + '</span>'; };
 
@@ -56,35 +56,24 @@
 
   C.contentLine = (o) => o.distributionMode === 'WALK_IN' && o.what ? o.what : o.categories.map(FTG.cat).join(', ');
 
-  // OfferCard
+  // OfferCard (v2 anatomy; colours from theme tokens)
   C.offerCard = (o, store, st, ctx) => {
     const dim = ['soldout', 'stopped', 'ended', 'expired', 'closed'].includes(st);
-    const r = store.ratings;
-    const walk = o.distributionMode === 'WALK_IN';
-    let strip = '';
-    if (walk) {
-      const last = ctx.lastReport;
-      strip = `<div class="walkin-strip"><span>${t('walkin_label')}</span></div>`;
-      if (last) strip += `<div class="xs" style="padding:8px 16px 0;color:var(--ink-700)"><span class="lvl ${last.lvl}" style="display:inline-block;margin-right:6px"></span>${t('latest_report', { r: t('r_' + last.lvl), a: C.ago(last.at, ctx.now) })}</div>`;
-    }
-    const time = t('pickup_window', { s: fmt(o.start), e: fmt(o.end) });
+    const walk = o.distributionMode === 'WALK_IN', r = store.ratings;
+    let left;
+    if (dim || st === 'possiblyGone' || st === 'review') left = `<span class="oc-pill l dim">${C.statusBadge(o, st).replace(/<[^>]+>/g, '')}</span>`;
+    else left = walk ? `<span class="oc-pill l walk">${t('walkin_badge')}</span>` : `<span class="oc-pill l">${t('left_n', { n: o.qtyLeft })}</span>`;
+    const last = walk ? ctx.lastReport : null;
+    const mode = walk
+      ? `<span class="oc-mode">${icon('alert')}${last ? `${t('r_' + last.lvl)} · ${C.ago(last.at, ctx.now)}` : t('walkin_label')}</span>`
+      : `<span class="oc-mode">${icon('bag')}<b>${t('reserve_badge')}</b></span>`;
     return `<article class="card ${dim ? 'dim' : ''}" data-action="openOffer" data-arg="${o.id}" role="link" tabindex="0" aria-label="${esc(store.name)}">
-      <div class="card-photo">${C.photo(o, store)}
-        <div class="tl">${C.modeBadge(o)}${C.statusBadge(o, st)}</div>
-        <div class="card-fav">${C.heart(store.id, ctx.fav)}</div>
-        <span class="photo-tag-wrap">${C.photoTag(o)}</span>
-      </div>
-      ${strip}
-      <div class="card-body">
-        <div class="name-row">${C.avatar(store, 'sm')}<div class="grow"><p class="name">${esc(store.name)}</p><p class="what">${esc(C.contentLine(o))}</p></div></div>
-        <div class="card-meta">
-          <div class="facts">
-            <span>${icon('clock')}${time}</span>
-            <span>${icon('pin')}${t('km', { d: km(store.km) })}</span>
-            ${r.n ? `<span style="color:var(--ink-900)">${icon('star').replace('<svg', '<svg style="width:16px;height:16px;color:var(--saffron-500)"')} ${num1(C.overall(r))} <span class="muted">(${r.n})</span></span>` : ''}
-          </div>
-          <div class="zero">${t('free')}</div>
-        </div>
+      <div class="oc-photo">${C.photo(o, store)}${left}${r.n ? `<span class="oc-pill r">${icon('star')}${num1(C.overall(r))}</span>` : ''}<span class="oc-tag">${C.photoTag(o)}</span><span class="oc-logo" aria-hidden="true">${esc(store.initials)}</span></div>
+      <div class="oc-body">
+        <div class="oc-title-row"><p class="oc-title">${esc(store.name)}</p><button class="oc-heart ${ctx.fav ? 'on' : ''}" data-action="toggleFav" data-arg="${store.id}" aria-pressed="${!!ctx.fav}" aria-label="${t('heart_label')}">${icon(ctx.fav ? 'heartFill' : 'heart')}</button></div>
+        <p class="oc-sub">${esc(walk ? (o.what || C.contentLine(o)) : t('surprise_bag') + ' · ' + C.contentLine(o))}</p>
+        <p class="oc-meta"><span>${t('pickup_window', { s: fmt(o.start), e: fmt(o.end) })}</span><i></i><span>${t('km', { d: km(store.km) })}</span></p>
+        <div class="oc-foot">${mode}<span class="zero">${t('free')}</span></div>
       </div>
     </article>`;
   };

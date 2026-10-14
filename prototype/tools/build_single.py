@@ -19,6 +19,10 @@ def js(m):
 
 html = re.sub(r'<link rel="stylesheet" href="([^"]+)">', css, html)
 html = re.sub(r'<script src="([^"]+)"></script>', js, html)
+# Embed photos so the single file works offline (FTG.photoSrc reads window.FTG_PHOTOS first).
+import json
+photos = {f.stem: 'data:image/jpeg;base64,' + base64.b64encode(f.read_bytes()).decode() for f in sorted((ROOT / 'v2' / 'photos').glob('*.jpg'))}
+html = html.replace('<head>', '<head>\n<script>window.FTG_PHOTOS = ' + json.dumps(photos) + ';</script>', 1)
 out = ROOT / 'dist' / 'freetogo-mockup.html'
 out.parent.mkdir(exist_ok=True)
 out.write_text(html, encoding='utf-8')

@@ -26,9 +26,21 @@ Also open `prototype/brand.html` for the three palettes and icon concepts.
 - Start with **"1 · Ei ruokaa → ilmoitus → nouto"** and follow the checklist, then 2–5.
 - Browser dev tools device mode (e.g. iPhone 14, Pixel 7) also works.
 
+## Themes
+
+Profile → Teema switches between themes 6–10 (the demo panel has the same buttons). The choice applies immediately and survives a reload. `v2/themes.html` shows Discover in all five side by side. Details: `docs/design/THEMES.md`.
+
+## Automated tests
+
+```bash
+node prototype/theme/check-contrast.mjs
+python3 prototype/tests/e2e_walkthrough.py                                  # needs: pip install playwright && playwright install chromium
+python3 prototype/tests/e2e_walkthrough.py prototype/dist/freetogo-mockup.html
+```
+
 ## What's simulated
 
-Push notifications, OS permission prompts, GPS, camera, map, QR codes and stock are all simulated and labelled as such. Food pictures are drawn illustrations standing in for merchant photos.
+Push notifications, OS permission prompts, GPS, camera, map, QR codes and stock are all simulated and labelled as such. Food pictures are real produce photos from Google's open-source Flutter demos (BSD-3, see `v2/photos/CREDITS.txt`), standing in for merchant photos.
 
 ## Rebuild the single-file version
 

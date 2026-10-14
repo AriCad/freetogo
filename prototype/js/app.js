@@ -290,6 +290,7 @@
   A.switchRole = () => { S.role = S.role === 'merchant' ? 'collector' : 'merchant'; S.stack = []; S.sheet = null; if (S.role === 'merchant') FTG.emit('roleMerchant'); };
   A.setRole = (r) => { if (S.role !== r) A.switchRole(); };
   A.openSheet = (type) => { S.sheet = { type }; };
+  A.setTheme = (id) => { FTG.setTheme(id); };
   A.setLang = (i) => { FTG.lang = +i; S.lang = +i; S.sheet = null; };
 
   // Toast
@@ -357,5 +358,7 @@
   document.addEventListener('input', onInput);
   document.addEventListener('change', onInput);
 
-  FTG.boot = () => { FTG.reset('explore'); };
+  // Theme layer: apply + persist (localStorage here; AsyncStorage in the native app, as in texttranslator Settings).
+  FTG.setTheme = (id) => { FTG.theme.apply(id); FTG.theme.save(id); FTG.theme.current = id; };
+  FTG.boot = () => { FTG.theme.current = FTG.theme.load(); FTG.theme.apply(FTG.theme.current); FTG.reset('explore'); };
 })();

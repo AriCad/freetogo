@@ -1,44 +1,45 @@
-/* Free To Go — design tokens (provisional palette A "Puolukka")
+/* Free To Go — design tokens. Colours are theme tokens (themes 6–10, theme/themes.js)
    These map 1:1 to the future React Native theme object (see docs/design/NATIVE_MAPPING.md). */
 
-@font-face { font-family: "Bricolage Grotesque"; font-weight: 700; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-700-normal.woff2") format("woff2"); }
-@font-face { font-family: "Bricolage Grotesque"; font-weight: 800; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-800-normal.woff2") format("woff2"); }
 @font-face { font-family: "Figtree"; font-weight: 400; font-display: swap; src: url("../fonts/figtree-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Figtree"; font-weight: 500; font-display: swap; src: url("../fonts/figtree-latin-500-normal.woff2") format("woff2"); }
 @font-face { font-family: "Figtree"; font-weight: 600; font-display: swap; src: url("../fonts/figtree-latin-600-normal.woff2") format("woff2"); }
 @font-face { font-family: "Figtree"; font-weight: 700; font-display: swap; src: url("../fonts/figtree-latin-700-normal.woff2") format("woff2"); }
 
 :root {
-  /* Brand */
-  --berry-800: #861238;
-  --berry-700: #9E1645;   /* pressed / text on berry-100 */
-  --berry-600: #C21E56;   /* primary: lingonberry — 5.8:1 on white */
-  --berry-100: #FDE8EF;
-  --berry-50:  #FFF5F8;
-
-  --ink-900: #241A3A;     /* blueberry ink: primary text — 15:1 on bg */
-  --ink-700: #463C5C;
-  --ink-500: #6B6280;     /* secondary text — 5.7:1 on white */
-  --ink-300: #B9B3C6;
-  --ink-200: #DEDAE6;
-  --ink-100: #EEEBF3;
-
-  --saffron-500: #FFB020; /* walk-in / uncertain — ink text 8.9:1 */
-  --saffron-400: #FFC550;
-  --saffron-100: #FFF1D6;
-  --saffron-800: #7A4B00;
-
-  --success-700: #1E7A4C;
-  --success-100: #E3F4EA;
-  --danger-700:  #B42318;
-  --danger-100:  #FDECEA;
-
-  --bg: #F6F4F8;          /* faint heather, not cream */
+  /* Theme tokens (defaults = theme 6). theme/themes.js overrides these on <html> for themes 6–10. */
+  --primary: #7A6FF0;
+  --primarySoft: #ECEBFD;
+  --accent: #7A6FF0;
+  --textPrimary: #1B1A2E;
+  --textSecondary: #5E5C70;
+  --background: #FCFBFF;
   --surface: #FFFFFF;
-  --scrim: rgba(36, 26, 58, .48);
+  --border: #D5D6EC;
+  --active: #6B5FEE;
+  --onActive: #FFFFFF;
+  --link: #6B5FEE;
+  --selected: #6B5FEE;
+  --onSelected: #FFFFFF;
+  --badge: #ECEBFD;
+  --badgeText: #5E51ED;
+  --icon: #7A6FF0;
+
+  /* Legacy names used across the stylesheet, now aliases of theme roles */
+  --berry-800: var(--active); --berry-700: var(--link); --berry-600: var(--active);
+  --berry-100: var(--primarySoft); --berry-50: var(--primarySoft);
+  --ink-900: var(--textPrimary); --ink-700: var(--textPrimary); --ink-500: var(--textSecondary);
+  --ink-300: #B8C0C7; --ink-200: var(--border); --ink-100: color-mix(in srgb, var(--border) 55%, #FFFFFF);
+  --saffron-500: var(--accent); --saffron-400: var(--primary); --saffron-100: var(--primarySoft); --saffron-800: var(--textPrimary);
+
+  /* Semantic status colours stay fixed across themes */
+  --success-700: #1E7A4C; --success-100: #E3F4EA; --danger-700: #B42318; --danger-100: #FDECEA;
+
+  --bg: var(--background);
+  --scrim: rgba(23, 38, 46, .45);
 
   /* Type */
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Figtree", ui-sans-serif, system-ui, sans-serif;
   --font-ui: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --fs-xs: 12px;  --lh-xs: 16px;
   --fs-sm: 14px;  --lh-sm: 20px;
@@ -54,7 +55,7 @@
   /* Radii — hierarchy, not one radius for everything */
   --r-sm: 8px;     /* photo labels, small tags */
   --r-md: 14px;    /* buttons, inputs */
-  --r-lg: 20px;    /* cards */
+  --r-lg: 16px;    /* cards */
   --r-xl: 28px;    /* sheets, phone screens */
   --r-pill: 999px; /* chips */
 
@@ -64,9 +65,9 @@
   --tabbar-h: 64px;
   --card-photo-h: 132px;
 
-  --shadow-card: 0 1px 2px rgba(36,26,58,.06), 0 4px 14px rgba(36,26,58,.06);
+  --shadow-card: 0 1px 2px rgba(23,38,46,.05), 0 6px 18px rgba(23,38,46,.06);
   --shadow-float: 0 10px 30px rgba(36,26,58,.18);
 
-  /* The signature pattern: hatched saffron = "no reservation, availability uncertain" */
-  --hatch: repeating-linear-gradient(135deg, var(--saffron-500) 0 9px, var(--saffron-400) 9px 18px);
+  /* Walk-in marking: flat tint (no stripes, no yellow) + dashed outline badges */
+  --hatch: var(--primarySoft);
 }

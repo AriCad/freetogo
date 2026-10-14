@@ -41,38 +41,35 @@
   V.discover = () => {
     const s = S(), L = s.location, D = s.discover;
     const c = L.city && FTG.city(L.city);
-    const title = L.mode === 'unset' ? t('loc_choose') : c.name;
-    const sub = L.mode === 'unset' ? '' : (L.mode === 'gps' ? t('loc_current') + ' · ' : '') + t('loc_within', { km: L.km });
-    const nf = FTG.activeFilterCount();
-    let h = `<div class="scroll" data-skey="discover"><div class="topbar"><button class="loc-chip" data-action="openLocation">${icon('pin')}<span style="min-width:0"><span class="t">${esc(title)}</span>${sub ? `<span class="sub">${sub}</span>` : ''}</span>${icon('down')}</button>${V.rolePill()}</div>`;
-    h += `<div class="searchrow"><label class="search">${icon('search')}<span class="sr-only">${t('search_ph')}</span><input type="search" placeholder="${t('search_ph')}" value="${esc(D.q)}" data-input="search" data-fkey="search"></label><button class="icon-btn" data-action="openFilters" aria-label="${t('filters')}">${icon('sliders')}${nf ? `<span class="badge-n">${nf}</span>` : ''}</button></div>`;
-    h += `<div class="chips" role="group">${[['all', 'mode_all'], ['reserved', 'mode_reserved'], ['walkin', 'mode_walkin']].map(([m, k]) => `<button class="chip ${D.mode === m ? 'on' : ''}" data-action="setMode" data-arg="${m}" aria-pressed="${D.mode === m}">${m === 'reserved' ? `<span class="sw" style="background:var(--berry-600)"></span>` : m === 'walkin' ? `<span class="sw" style="background:var(--hatch)"></span>` : ''}${t(k)}</button>`).join('')}</div>`;
+        const nf = FTG.activeFilterCount();
+    const bellOn = s.notif.permission === 'granted' && (s.notif.fav || s.notif.radius || s.notif.cities.length || s.bells.length);
+    let h = `<div class="scroll" data-skey="discover"><div class="loc-row"><button class="loc-btn" data-action="openLocation"><span class="loc-ic">${icon('pin')}</span><span class="loc-txt">${L.mode === 'unset' ? `<b>${t('loc_choose')}</b>` : `<b>${esc(c.name)}</b> <span>· ${L.mode === 'gps' ? t('loc_current').toLowerCase() + ' · ' : ''}${L.km} km</span>`}</span>${icon('down')}</button><button class="icon-round" data-action="openNotif" aria-label="${t('notif_title')}">${icon('bell')}${bellOn ? '<span class="pip"></span>' : ''}</button><button class="icon-round" data-action="switchRole" aria-label="${t('switch_to_merchant')}">${icon('swap')}</button></div>`;
+    h += `<div class="searchrow"><label class="search">${icon('search')}<span class="sr-only">${t('search_ph')}</span><input type="search" placeholder="${t('search_ph')}" value="${esc(D.q)}" data-input="search" data-fkey="search"></label><button class="icon-btn" data-action="openFilters" aria-label="${t('filters')}">${icon('sliders')}${nf ? `<span class="badge-n">${nf}</span>` : ''}</button>${L.mode === 'unset' ? '' : `<button class="icon-btn" data-action="setView" data-arg="${D.view === 'map' ? 'list' : 'map'}" aria-label="${t(D.view === 'map' ? 'view_list' : 'view_map')}">${icon(D.view === 'map' ? 'list' : 'map')}</button>`}</div>`;
+    h += `<div class="seg pad" style="margin:12px 16px 0;padding:3px" role="group">${[['all', 'mode_all'], ['reserved', 'mode_reserved'], ['walkin', 'mode_walkin']].map(([m, k]) => `<button class="${D.mode === m ? 'on' : ''}" data-action="setMode" data-arg="${m}" aria-pressed="${D.mode === m}">${t(k)}</button>`).join('')}</div>`;
+    const note = `<p class="demo-note">${t('mock_banner')}<br>${t('photo_credit')}</p>`;
 
     if (L.mode === 'unset') {
-      h += V.mockbar();
-      h += C.empty({ title: t('pick_location_title'), body: t('pick_location_body'), actions: C.actionCard('useGps', '', 'nav', 'berry', t('loc_use_gps'), t('loc_use_gps_s')) + C.actionCard('openLocation', '', 'city', 'saffron', t('loc_pick_city'), FTG.CITIES.slice(0, 4).map(c => c.name).join(', ') + '…') });
-      return h + `<div style="height:24px"></div></div>`;
+      h += C.empty({ title: t('pick_location_title'), body: t('pick_location_body'), actions: C.actionCard('useGps', '', 'nav', 'berry', t('loc_use_gps'), t('loc_use_gps_s')) + C.actionCard('openLocation', '', 'city', 'berry', t('loc_pick_city'), FTG.CITIES.slice(0, 4).map(c => c.name).join(', ') + '…') });
+      return h + note + `</div>`;
     }
     const list = FTG.discoverOffers();
-    const area = FTG.offersInArea();
-    h += `<div class="pad mt-3 between"><span class="small muted bold">${t('results_n', { n: list.length })}</span><div class="seg" style="width:184px">${[['list', 'list', 'view_list'], ['map', 'map', 'view_map']].map(([v, ic, k]) => `<button class="${D.view === v ? 'on' : ''}" data-action="setView" data-arg="${v}" aria-pressed="${D.view === v}">${icon(ic).replace('<svg', '<svg style="width:18px;height:18px"')}${t(k)}</button>`).join('')}</div></div>`;
-    h += V.mockbar();
-
-    if (!area.length) { h += V.emptyArea(); return h + `<div style="height:24px"></div></div>`; }
-    if (!list.length) {
-      h += C.empty({ title: t('no_match_title'), body: t('no_match_body'), art: false, actions: `<button class="btn secondary block" data-action="clearFilters">${t('clear_filters')}</button>` });
-      return h + '</div>';
-    }
-    if (D.view === 'map') { h += V.mapView(list); return h + `<div style="height:24px"></div></div>`; }
+    if (!FTG.offersInArea().length) return h + V.emptyArea() + note + `</div>`;
+    if (!list.length) return h + C.empty({ title: t('no_match_title'), body: t('no_match_body'), art: false, actions: `<button class="btn secondary block" data-action="clearFilters">${t('clear_filters')}</button>` }) + note + '</div>';
+    if (D.view === 'map') return h + V.mapView(list) + note + `</div>`;
 
     const ctx = (o) => ({ now: s.now, fav: s.favorites.includes(o.storeId), lastReport: o.distributionMode === 'WALK_IN' ? FTG.walkSignal(o).last : null });
-    const groups = [['now_title', o => o.start <= s.now && !['soldout', 'stopped'].includes(FTG.offerState(o))], ['later_title', o => o.start > s.now && !['soldout', 'stopped'].includes(FTG.offerState(o))], ['sold_out_title', o => ['soldout', 'stopped'].includes(FTG.offerState(o))]];
-    h += `<div class="pad">`;
-    groups.forEach(([k, f]) => {
+    const sold = (o) => ['soldout', 'stopped'].includes(FTG.offerState(o));
+    const groups = [
+      ['now_title', o => o.distributionMode === 'RESERVED' && o.start <= s.now && !sold(o)],
+      ['walkin_now_title', o => o.distributionMode === 'WALK_IN', 'walkin_now_note'],
+      ['later_title', o => o.distributionMode === 'RESERVED' && o.start > s.now && !sold(o)],
+      ['sold_out_title', o => sold(o)],
+    ];
+    groups.forEach(([k, f, n]) => {
       const g = list.filter(f); if (!g.length) return;
-      h += `<div class="section-title"><h2 class="h3">${t(k)}</h2><span class="small muted">${g.length}</span></div><div class="cards">${g.map(o => C.offerCard(o, FTG.store(o.storeId), FTG.offerState(o), ctx(o))).join('')}</div>`;
+      h += `<section class="sec-v2"><div class="head"><h2>${t(k)}</h2><span class="n">${t('results_n', { n: g.length })}</span></div>${n ? `<p class="note">${t(n)}</p>` : ''}<div class="rail-v2">${g.map(o => C.offerCard(o, FTG.store(o.storeId), FTG.offerState(o), ctx(o))).join('')}</div></section>`;
     });
-    return h + `</div><div style="height:24px"></div></div>`;
+    return h + note + `</div>`;
   };
 
   V.emptyArea = () => {
@@ -293,14 +290,14 @@
   V.profile = () => {
     const s = S(), m = FTG.store(FTG.MERCHANT_STORE_ID);
     let h = `<div class="scroll" data-skey="profile"><div class="view-pad"><h1 class="h1" style="margin:8px 0 12px">${t('profile_title')}</h1>`;
-    h += `<div class="block" style="display:flex;gap:14px;align-items:center;margin-top:0"><span class="avatar lg" style="background:var(--berry-600)">AK</span><div style="flex:1"><div class="h3">Aino K.</div><div class="small muted">aino.k@example.fi</div></div><div class="center"><div class="score-big" style="font-size:32px;color:var(--berry-600)">${s.impact}</div><div class="xs muted">${t('saved_impact')}</div></div></div>`;
+    h += `<div class="block" style="display:flex;gap:14px;align-items:center;margin-top:0"><span class="avatar lg" style="background:var(--active);color:var(--onActive);border-color:var(--active)">AK</span><div style="flex:1"><div class="h3">Aino K.</div><div class="small muted">aino.k@example.fi</div></div><div class="center"><div class="score-big" style="font-size:32px;color:var(--berry-600)">${s.impact}</div><div class="xs muted">${t('saved_impact')}</div></div></div>`;
     h += `<div class="section-title"><h2 class="h3">${t('roles')}</h2></div><div class="list">`;
     [['collector', t('role_collector'), t('role_collector_s'), 'bag'], ['merchant', t('role_merchant'), t('role_merchant_s', { store: m.name }), 'store']].forEach(([r, ti, sub, ic]) => {
       const on = s.role === r;
       h += `<div class="row-item"><span class="ic" style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:${on ? 'var(--berry-100)' : 'var(--ink-100)'};color:${on ? 'var(--berry-700)' : 'var(--ink-700)'}">${icon(ic)}</span><div class="grow"><span class="t">${ti}</span><span class="s">${esc(sub)}</span></div><div class="r">${on ? `<span class="badge ok">${t('active_role')}</span>` : `<button class="btn secondary sm" data-action="setRole" data-arg="${r}">${t('use_role')}</button>`}</div></div>`;
     });
     h += `</div><div class="list mt-4">`;
-    [['openNotif', '', 'bell', t('p_alerts')], ['openLocation', '', 'pin', t('p_location')], ['openSheet', 'lang', 'globe', `${t('p_language')} · ${FTG.lang ? 'English' : 'Suomi'}`], ['openSheet', 'privacy', 'lock', t('p_privacy')], ['openSheet', 'help', 'help', t('p_help')]].forEach(([a, arg, ic, ti]) => { h += `<button class="row-item" data-action="${a}" data-arg="${arg}">${icon(ic)}<span class="grow t">${ti}</span>${icon('right')}</button>`; });
+    [['openNotif', '', 'bell', t('p_alerts')], ['openLocation', '', 'pin', t('p_location')], ['openSheet', 'theme', 'sliders', `${t('theme_title')} · ${t('theme_n', { n: FTG.theme.current })} ${FTG.theme.THEMES[FTG.theme.current].name}`], ['openSheet', 'lang', 'globe', `${t('p_language')} · ${FTG.lang ? 'English' : 'Suomi'}`], ['openSheet', 'privacy', 'lock', t('p_privacy')], ['openSheet', 'help', 'help', t('p_help')]].forEach(([a, arg, ic, ti]) => { h += `<button class="row-item" data-action="${a}" data-arg="${arg}">${icon(ic)}<span class="grow t">${ti}</span>${icon('right')}</button>`; });
     return h + `</div><p class="xs muted center mt-6">Free To Go · Stage One HTML mockup</p></div></div>`;
   };
 
@@ -353,6 +350,7 @@
     safety: (sh) => C.sheet(t('safety_t'), `<p class="muted small">${t('safety_s')}</p><div class="list" style="border:1px solid var(--ink-100)">${[['spoiled', 'sf_spoiled'], ['allergen', 'sf_allergen'], ['other', 'sf_other']].map(([k, l]) => `<button class="row-item" data-action="safetyKind" data-arg="${k}" role="radio" aria-checked="${sh.kind === k}"><span class="grow t">${t(l)}</span>${sh.kind === k ? `<span style="color:var(--berry-600)">${icon('check')}</span>` : ''}</button>`).join('')}</div>${C.callout('danger', 'alert', t('safety_urgent'))}<div class="btns"><button class="btn primary block" data-action="safetySend" ${sh.kind ? '' : 'disabled'}>${t('send_report')}</button>${sh.kind ? '' : C.disabledWhy(FTG.lang ? 'Choose what happened first.' : 'Valitse ensin, mitä tapahtui.')}</div>`),
     addCity: () => { const s = S(); return C.sheet(t('add_city'), `<div class="list" style="border:1px solid var(--ink-100)">${FTG.CITIES.map(c => { const on = s.notif.cities.includes(c.id); return `<button class="row-item" data-action="toggleCityAlert" data-arg="${c.id}" aria-pressed="${on}">${icon('city')}<span class="grow t">${c.name}</span><span class="check ${on ? 'on' : ''}" style="border:0;padding:0;min-height:0;background:none"><span class="box">${icon('check')}</span></span></button>`; }).join('')}</div><p class="small muted mt-3">${t('n_city_s')}</p><div class="btns"><button class="btn primary block" data-action="closeSheet">${t('done')}</button></div>`); },
     lang: () => C.sheet(t('p_language'), `<div class="list" style="border:1px solid var(--ink-100)">${[['0', 'Suomi'], ['1', 'English']].map(([i, l]) => `<button class="row-item" data-action="setLang" data-arg="${i}"><span class="grow t">${l}</span>${+i === FTG.lang ? `<span style="color:var(--berry-600)">${icon('check')}</span>` : ''}</button>`).join('')}</div><p class="small muted mt-3">${FTG.lang ? 'More languages can be added without changing screens.' : 'Lisää kieliä voidaan lisätä muuttamatta näkymiä.'}</p>`),
+    theme: () => C.sheet(t('theme_title'), `<p class="muted small">${t('theme_s')}</p>${Object.entries(FTG.theme.THEMES).map(([id, th]) => `<button class="theme-opt ${FTG.theme.current === id ? 'on' : ''}" data-action="setTheme" data-arg="${id}" aria-pressed="${FTG.theme.current === id}"><span class="sw" style="background:${th.primary}"></span><span><span class="t">${t('theme_n', { n: id })} · ${th.name}</span><span class="s">${th.primary}</span></span>${FTG.theme.current === id ? `<span class="ck">${icon('check')}</span>` : ''}</button>`).join('')}<div class="btns"><button class="btn primary block" data-action="closeSheet">${t('done')}</button></div>`),
     privacy: () => C.sheet(t('p_privacy'), `<p class="muted">${t('privacy_body')}</p><div class="btns"><button class="btn primary block" data-action="closeSheet">${t('close')}</button></div>`),
     help: () => C.sheet(t('p_help'), `<p class="muted">${t('help_body')}</p><div class="btns"><button class="btn primary block" data-action="closeSheet">${t('close')}</button></div>`),
   };

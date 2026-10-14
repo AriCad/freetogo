@@ -6,10 +6,10 @@
   const L = (fi, en) => FTG.lang ? en : fi;
 
   const ACTIONS = {
-    pubKaneli: [['Leipomo Kaneli julkaisee 5 kassia', 'Leipomo Kaneli publishes 5 bags'], () => simPublish('kaneli', { categories: ['bread', 'snacks'], qty: 5, start: 17 * 60, end: 18 * 60 + 30, art: 'bread', desc: 'Päivän leivät ja pullat.' })],
+    pubKaneli: [['Kauppahallin Marjapuoti julkaisee 5 kassia', 'Kauppahallin Marjapuoti publishes 5 bags'], () => simPublish('kaneli', { categories: ['produce'], qty: 5, start: 17 * 60, end: 18 * 60 + 30, art: 'bread', desc: 'Mansikoita ja karhunvatukoita.' })],
     pubPihlaja: [['Lähikauppa Pihlaja julkaisee 4 kassia', 'Lähikauppa Pihlaja publishes 4 bags'], () => simPublish('pihlaja', { categories: ['produce', 'dairy'], qty: 4, start: 17 * 60 + 30, end: 19 * 60, art: 'groceries' })],
-    pubKumo: [['Sushi Kumo (6,8 km) julkaisee', 'Sushi Kumo (6.8 km) publishes'], () => simPublish('kumo', { categories: ['fish', 'meals'], qty: 3, start: 19 * 60, end: 20 * 60, art: 'sushi' })],
-    pubHarju: [['Leipätupa Harju, Jyväskylä julkaisee', 'Leipätupa Harju, Jyväskylä publishes'], () => simPublish('harju', { categories: ['bread'], qty: 4, start: 17 * 60 + 30, end: 18 * 60 + 30, art: 'pastry' })],
+    pubKumo: [['Sienitori Kuusi (6,8 km) julkaisee', 'Sienitori Kuusi (6.8 km) publishes'], () => simPublish('kumo', { categories: ['produce'], qty: 3, start: 19 * 60, end: 20 * 60, art: 'sushi' })],
+    pubHarju: [['Sitruskioski Harju, Jyväskylä julkaisee', 'Sitruskioski Harju, Jyväskylä publishes'], () => simPublish('harju', { categories: ['produce'], qty: 4, start: 17 * 60 + 30, end: 18 * 60 + 30, art: 'pastry' })],
     othersReserve: [['Muut varaavat loput Pihlajan kassit', 'Others reserve the remaining Pihlaja bags'], othersReserve],
     otherNone: [['Toinen kerääjä: Kaikki loppu', 'Another collector: All gone'], () => otherReport('u71')],
     otherNone2: [['Kolmas kerääjä: Kaikki loppu', 'A third collector: All gone'], () => otherReport('u72')],
@@ -42,15 +42,16 @@
   }
   function staleAlert() {
     const s = S();
-    const o = FTG.makeOffer({ storeId: 'kaneli', distributionMode: 'RESERVED', categories: ['bread'], qtyTotal: 5, qtyLeft: 2, start: s.now - 120, end: s.now - 30, publishedAt: s.now - 180, photo: { kind: 'current', art: 'bread', at: s.now - 182 } });
+    const o = FTG.makeOffer({ storeId: 'kaneli', distributionMode: 'RESERVED', categories: ['produce'], qtyTotal: 5, qtyLeft: 2, start: s.now - 120, end: s.now - 30, publishedAt: s.now - 180, photo: { kind: 'current', art: 'bread', at: s.now - 182 } });
     s.offers.push(o);
-    FTG.showPush({ kind: 'offer', stale: true, offerId: o.id, title: FTG.t('push_new_bags_t', { store: 'Leipomo Kaneli', n: 5 }), body: L('Saapunut 3 h sitten', 'Arrived 3 h ago') });
+    FTG.showPush({ kind: 'offer', stale: true, offerId: o.id, title: FTG.t('push_new_bags_t', { store: 'Kauppahallin Marjapuoti', n: 5 }), body: L('Saapunut 3 h sitten', 'Arrived 3 h ago') });
   }
 
   DA.dScenario = (id) => { FTG.reset(id); };
   DA.dAct = (k) => { ACTIONS[k][1](); };
   DA.dClock = (n) => { FTG.advance(+n); };
   DA.dWidth = (w) => { document.documentElement.style.setProperty('--device-w', w + 'px'); S().demo.width = +w; };
+  DA.dTheme = (id) => FTG.setTheme(id);
   DA.dLang = (i) => { FTG.lang = +i; S().lang = +i; };
   DA.dRole = () => FTG.A.switchRole();
   DA.dOpen = () => document.getElementById('demo').classList.add('open');
@@ -66,7 +67,7 @@
     if (acts.length) h += `<h2>${L('Simuloi tapahtuma', 'Simulate an event')}</h2><div class="row">${acts.map(k => `<button class="d ${k === 'race' && s.demo.race ? 'on' : ''}" data-action="dAct" data-arg="${k}">${ACTIONS[k][0][FTG.lang]}</button>`).join('')}</div>`;
     h += `<h2>${L('Muut simulaatiot', 'More simulations')}</h2><div class="row">${['pubKaneli', 'pubPihlaja', 'pubKumo', 'pubHarju', 'otherNone', 'staleAlert', 'race'].filter(k => !(sc.actions || []).includes(k)).map(k => `<button class="d ${k === 'race' && s.demo.race ? 'on' : ''}" data-action="dAct" data-arg="${k}">${ACTIONS[k][0][FTG.lang]}</button>`).join('')}</div>`;
     h += `<h2>${L('Demoaika', 'Demo clock')} · ${fmt(s.now)}</h2><div class="row"><button class="d" data-action="dClock" data-arg="10">+10 min</button><button class="d" data-action="dClock" data-arg="30">+30 min</button><button class="d" data-action="dClock" data-arg="60">+60 min</button><button class="d" data-action="dAct" data-arg="clockNight">22:30</button></div>`;
-    h += `<h2>${L('Näkymä', 'View')}</h2><div class="row"><button class="d" data-action="dRole">${s.role === 'merchant' ? L('Vaihda kerääjäksi', 'Switch to collector') : L('Vaihda kauppiaaksi', 'Switch to merchant')}</button><button class="d ${!FTG.lang ? 'on' : ''}" data-action="dLang" data-arg="0">Suomi</button><button class="d ${FTG.lang ? 'on' : ''}" data-action="dLang" data-arg="1">English</button></div><div class="row" style="margin-top:6px">${[360, 390, 430].map(w => `<button class="d ${(s.demo.width || 390) === w ? 'on' : ''}" data-action="dWidth" data-arg="${w}">${w}px</button>`).join('')}</div>`;
+    h += `<h2>${L('Näkymä', 'View')}</h2><div class="row"><button class="d" data-action="dRole">${s.role === 'merchant' ? L('Vaihda kerääjäksi', 'Switch to collector') : L('Vaihda kauppiaaksi', 'Switch to merchant')}</button><button class="d ${!FTG.lang ? 'on' : ''}" data-action="dLang" data-arg="0">Suomi</button><button class="d ${FTG.lang ? 'on' : ''}" data-action="dLang" data-arg="1">English</button></div><div class="row" style="margin-top:6px">${Object.entries(FTG.theme.THEMES).map(([id, th]) => `<button class="d ${FTG.theme.current === id ? 'on' : ''}" data-action="dTheme" data-arg="${id}"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${th.primary};margin-right:6px"></span>${L('Teema', 'Theme')} ${id}</button>`).join('')}</div><div class="row" style="margin-top:6px">${[360, 390, 430].map(w => `<button class="d ${(s.demo.width || 390) === w ? 'on' : ''}" data-action="dWidth" data-arg="${w}">${w}px</button>`).join('')}</div>`;
     h += `<h2>${L('Ilmoitus- ja tapahtumaloki', 'Notification & event log')}</h2><div class="log" data-empty="—">${s.demo.log.map(l => `<div><b>${fmt(l.at)}</b> ${esc(FTG.lang ? l.en : l.fi)}</div>`).join('')}</div>`;
     h += `<p style="margin-top:14px" class="xs">${L('Pois päältä ja piilotettu: maksut, muut toimialat, kohdennettu kanava, kampanjat ja etuoikeus. Katso docs/design.', 'Off and hidden: payments, other verticals, targeted channel, campaigns and priority. See docs/design.')}</p>`;
     return h;

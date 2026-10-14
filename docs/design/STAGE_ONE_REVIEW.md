@@ -142,7 +142,7 @@ All five master-prompt scenarios are one-click setups in the demo panel with liv
 1. No food → city → favourite → bell + permission → simulated push → deep link → reserve → scan → four ratings.
 2. Merchant publishes 5 bags with several food-group checkboxes → collector reserves → others reserve the rest (fully reserved) → merchant cancels with reason → collector gets cancellation alert and callout.
 3. Merchant publishes bananas walk-in (camera-only photo, start/end) → collector sees the exact label → reports + optional quality → one unverified "Kaikki loppu" = *possibly gone*; two independent = *under review* (never auto-closed) → merchant "Kaikki loppu" closes it.
-4. Favourite + bell + 5 km radius + Tampere city all match → event log shows "4 matches → 1 alert". Sushi Kumo (6.8 km) → city-only match. Jyväskylä shop → no alert until you add the city. Quiet hours hold alerts.
+4. Favourite + bell + 5 km radius + Tampere city all match → event log shows "4 matches → 1 alert". Sienitori Kuusi (6.8 km) → city-only match. Jyväskylä shop → no alert until you add the city. Quiet hours hold alerts.
 5. Location denied → manual city · old alert opens an ended offer · "I didn't get my bag" · reservation race lost · possibly-gone walk-in · blocked notifications with fix.
 
 **Automated check (local Playwright, no cloud):** a script walked all five scenarios plus extras — 0 JavaScript errors, 0 failed steps, no horizontal overflow at 360/390/430 px, in Finnish and English, and in a 390×844 phone viewport. Screenshots: `docs/design/screenshots/`.
