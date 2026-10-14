@@ -126,3 +126,12 @@ Opt-in settings with toggles:
 - Consumer €0.99 access and merchant SaaS fees are **independent** of customers paying for a discounted food bag. Do not conflate the three separate kinds of monetization.
 - Design a future variant of the user flow: discover -> paid offer detail -> checkout -> external payment confirmation -> reservation confirmed -> collect -> rate. Never confirm paid inventory unless the payment/reservation saga completes; use a short expiry hold where needed.
 - Legal approval needed by market for payments, disclosures, consumer cancellation rights, tax, merchant-of-record structure and refunds.
+
+
+## 11. Future community support (OFF and hidden at launch)
+Full approved future-ready specification: [COMMUNITY_SUPPORT.md](COMMUNITY_SUPPORT.md).
+- Merchant-donated meals, Christmas food bags and similar free goods will eventually be distributed to eligible people **through Free To Go itself**: merchant publishes → targeted user app alert/discovery → app reservation → QR pickup. NOT merely an external charity referral or link.
+- A discreet voluntary "Tarvitsen apua" request, time-limited partner-verified eligibility, and campaigns are future enhancements, not visible or actionable in launch app or Stage One HTML mockup. Do not request/store detailed hardship evidence, family details or children's identity by default.
+- The optional **five-minute early-access reservation window** is **DISABLED BY DEFAULT AND HIDDEN**, server-side and client-side in all markets. Future activation requires a separate explicit product decision, selected eligible recipients, selected participating shops and quotas, fair unused-stock release after five minutes, abuse safeguards and review.
+- Merchant gifts in kind remain priced 0 €. A future third-party-funded "sponsor a meal" purchase through our app would be a separate legally approved payments/fundraising feature, never turned on by default.
+- Existing mainstream discovery, two giveaway modes and zero-fee launch remain unchanged.
