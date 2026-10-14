@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Free To Go – Löydä (v2)</title>
+<style>
+@font-face { font-family: "Figtree"; font-weight: 400; src: url("../fonts/figtree-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-weight: 500; src: url("../fonts/figtree-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-weight: 600; src: url("../fonts/figtree-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-weight: 700; src: url("../fonts/figtree-latin-700-normal.woff2") format("woff2"); }
+
+/* v2 tokens — pale blue-teal direction (provisional, awaiting approval) */
+:root {
+  --primary: #8FC1D6;       /* pale blue-teal: brand surfaces, selected states, soft CTA */
+  --primary-tint: #E8F2F7;  /* very light wash of primary */
+  --secondary: #2B6C8C;     /* deep blue-teal: links, active tab, icons, text on light */
+  --bg: #F7FAFB;            /* near-white, slightly cool */
+  --surface: #FFFFFF;
+  --text: #17262E;          /* main text */
+  --muted: #5E6E77;         /* secondary text, 5.3:1 on white */
+  --line: #E3EAEE;
+  --shadow: 0 1px 2px rgba(23,38,46,.05), 0 6px 18px rgba(23,38,46,.06);
+  --font: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--font); color: var(--text); background: #E9EEF1; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--secondary); outline-offset: 2px; }
+
+.stage { min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 28px 16px; }
+.device { width: 414px; padding: 12px; border-radius: 52px; background: #1A2328; box-shadow: 0 30px 60px rgba(23,38,46,.25); }
+.screen { position: relative; width: 390px; height: 844px; border-radius: 40px; overflow: hidden; background: var(--surface); display: flex; flex-direction: column; }
+@media (max-width: 460px) {
+  body { background: var(--surface); }
+  .stage { padding: 0; display: block; }
+  .device { width: 100%; padding: 0; border-radius: 0; box-shadow: none; background: none; }
+  .screen { width: 100%; height: 100dvh; border-radius: 0; }
+  .status { display: none !important; }
+  .scroll { padding-top: 6px !important; }
+}
+
+.status { height: 46px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; font-weight: 600; font-size: 15px; position: relative; }
+.notch { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 112px; height: 30px; background: #1A2328; border-radius: 0 0 18px 18px; }
+.scroll { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.scroll::-webkit-scrollbar { display: none; }
+
+/* Header */
+.loc { display: flex; align-items: center; gap: 10px; padding: 6px 16px 0; }
+.loc-btn { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 0; min-height: 48px; text-align: left; }
+.loc-ic { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--primary-tint); color: var(--secondary); display: grid; place-items: center; }
+.loc-txt { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; }
+.loc-txt b { font-weight: 700; }
+.loc-txt span { color: var(--muted); }
+.icon-btn { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; color: var(--secondary); position: relative; }
+.icon-btn .dot { position: absolute; top: 9px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--secondary); border: 2px solid #fff; }
+
+.search-row { display: flex; gap: 10px; padding: 10px 16px 0; }
+.search { flex: 1; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); color: var(--muted); min-width: 0; }
+.search input { border: 0; outline: 0; background: none; flex: 1; min-width: 0; font: inherit; font-size: 15px; color: var(--text); }
+.search input::placeholder { color: var(--muted); }
+.filter { flex: none; width: 46px; height: 46px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; color: var(--secondary); }
+
+.seg { margin: 12px 16px 0; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 3px; }
+.seg button { border: 0; background: none; height: 38px; border-radius: 11px; font-weight: 600; font-size: 14px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--primary); color: var(--text); }
+
+/* Sections */
+.sec { margin-top: 22px; }
+.sec-head { display: flex; align-items: baseline; justify-content: space-between; padding: 0 16px; margin-bottom: 10px; }
+.sec-head h2 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+.sec-head a { color: var(--secondary); font-weight: 600; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; }
+.sec-note { padding: 0 16px; margin: -4px 0 10px; color: var(--muted); font-size: 13.5px; line-height: 19px; }
+.rail { display: flex; gap: 12px; overflow-x: auto; padding: 2px 16px 10px; scroll-snap-type: x mandatory; scroll-padding: 16px; scrollbar-width: none; }
+.rail::-webkit-scrollbar { display: none; }
+
+/* Offer card */
+.card { flex: none; width: 300px; scroll-snap-align: start; background: var(--surface); border-radius: 16px; border: 1px solid var(--line); box-shadow: var(--shadow); overflow: hidden; }
+.photo { position: relative; height: 150px; background: var(--bg); }
+.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pill { position: absolute; top: 10px; height: 26px; padding: 0 10px; border-radius: 999px; background: rgba(255,255,255,.96); font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 1px 3px rgba(23,38,46,.12); }
+.pill.left { left: 10px; }
+.pill.right { right: 10px; }
+.pill svg { width: 13px; height: 13px; color: var(--secondary); }
+.pill.walk { background: rgba(255,255,255,.96); border: 1.5px dashed var(--secondary); color: var(--secondary); box-shadow: none; }
+.logo { position: absolute; left: 12px; bottom: -22px; width: 48px; height: 48px; border-radius: 50%; background: #fff; border: 1px solid var(--line); box-shadow: 0 2px 6px rgba(23,38,46,.10); display: grid; place-items: center; font-weight: 700; font-size: 14px; color: var(--secondary); letter-spacing: .02em; }
+.body { padding: 28px 14px 12px; }
+.title-row { display: flex; align-items: center; gap: 8px; }
+.title { flex: 1; min-width: 0; margin: 0; font-size: 16.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.heart { flex: none; width: 40px; height: 40px; margin: -8px -8px -8px 0; border: 0; background: none; display: grid; place-items: center; color: var(--text); }
+.heart[aria-pressed="true"] { color: var(--secondary); }
+.heart[aria-pressed="true"] path { fill: currentColor; }
+.sub { margin: 2px 0 0; color: var(--text); font-size: 14px; }
+.meta { margin: 4px 0 0; color: var(--muted); font-size: 14px; display: flex; gap: 8px; white-space: nowrap; }
+.meta i { width: 1px; background: var(--line); }
+.foot { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.mode { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); }
+.mode svg { width: 16px; height: 16px; color: var(--secondary); }
+.mode b { color: var(--text); font-weight: 600; }
+.zero { font-size: 18px; font-weight: 700; }
+
+/* Alerts nudge */
+.nudge { margin: 22px 16px 0; display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 16px; background: var(--primary-tint); }
+.nudge .ic { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--surface); color: var(--secondary); display: grid; place-items: center; }
+.nudge p { margin: 0; font-size: 14px; line-height: 19px; color: var(--text); }
+.nudge p b { display: block; font-size: 15px; }
+.nudge button { flex: none; border: 0; background: var(--secondary); color: #fff; font-weight: 600; font-size: 14px; height: 40px; padding: 0 14px; border-radius: 999px; }
+
+.demo-note { margin: 18px 16px 24px; color: var(--muted); font-size: 12px; line-height: 17px; text-align: center; }
+
+/* Tab bar */
+.tabs { flex: none; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); background: var(--surface); padding: 6px 0 22px; }
+.tab { border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 52px; justify-content: center; font-size: 12px; font-weight: 600; color: var(--muted); }
+.tab svg { width: 24px; height: 24px; }
+.tab[aria-current="page"] { color: var(--secondary); }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 96px; background: var(--text); color: #fff; border-radius: 14px; padding: 12px 14px; font-size: 14px; opacity: 0; transform: translateY(8px); transition: .2s; pointer-events: none; }
+.toast.on { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+<div class="stage"><div class="device"><div class="screen">
+  <div class="status"><span>16:40</span><span class="notch"></span><span>●●●</span></div>
+  <div class="scroll">
+    <div class="loc">
+      <button class="loc-btn" aria-label="Valittu sijainti: Tampere, 5 km">
+        <span class="loc-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span>
+        <span class="loc-txt"><b>Valittu sijainti</b> <span>Tampere · 5 km</span></span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Ilmoitukset"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></svg><span class="dot"></span></button>
+    </div>
+
+    <div class="search-row">
+      <label class="search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" placeholder="Hae kauppaa tai ruokaa" aria-label="Hae kauppaa tai ruokaa"></label>
+      <button class="filter" aria-label="Suodattimet"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+    </div>
+
+    <div class="seg" role="group" aria-label="Jakotapa">
+      <button aria-pressed="true" data-mode="all">Kaikki</button>
+      <button aria-pressed="false" data-mode="RESERVED">Varattavat</button>
+      <button aria-pressed="false" data-mode="WALK_IN">Ei varausta</button>
+    </div>
+
+    <main id="sections"></main>
+
+    <div class="nudge">
+      <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></svg></span>
+      <p><b>Kuule ensimmäisenä</b>Ilmoitus, kun lähelle tulee ilmaista ruokaa.</p>
+      <button>Ota käyttöön</button>
+    </div>
+
+    <p class="demo-note">Demodata: kaupat ja tarjoukset ovat kuvitteellisia, ei oikeaa saatavuutta.<br>Kuvat: Flutter-projektin esimerkkikuvat (BSD-lisenssi).</p>
+  </div>
+
+  <nav class="tabs" aria-label="Päävalikko">
+    <button class="tab" aria-current="page"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="m15.5 8.5-2 5-5 2 2-5z" fill="#fff"/></svg>Löydä</button>
+    <button class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Suosikit</button>
+    <button class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Noudot</button>
+    <button class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Profiili</button>
+  </nav>
+  <div class="toast" role="status" id="toast"></div>
+</div></div></div>
+
+<script>
+const STAR = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="m12 2.8 2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/></svg>';
+const BAG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
+const WALK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="m10 21 2-6 3 3v3M9 11l3-3 3 3 3 1M12 8l-1 7"/></svg>';
+const HEART = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>';
+
+// Same offer model as the Stage One mockup: distributionMode RESERVED | WALK_IN, all 0 €, public, food.
+const OFFERS = [
+  { sec: 'now', mode: 'RESERVED', store: 'Lähikauppa Pihlaja', logo: 'LP', what: 'Yllätyskassi', photo: 'pihlaja', left: 3, rating: '4,6', time: '17:30–19:00', km: '1,6 km', fav: true },
+  { sec: 'now', mode: 'RESERVED', store: 'Kauppahallin Marjapuoti', logo: 'KM', what: 'Marjakassi', photo: 'marjapuoti', left: 2, rating: '4,8', time: '17:00–18:00', km: '0,9 km' },
+  { sec: 'walk', mode: 'WALK_IN', store: 'Hedelmätori Aurinko', logo: 'HA', what: 'Laatikollinen mandariineja', photo: 'aurinko', rating: '4,4', time: '16:20–18:00', km: '2,1 km', report: 'Vähän jäljellä · 6 min sitten' },
+  { sec: 'walk', mode: 'WALK_IN', store: 'Torikoju Kotimaista', logo: 'TK', what: 'Omenoita laatikoittain', photo: 'omenat', rating: '4,5', time: '16:30–17:30', km: '2,4 km', report: 'Paljon jäljellä · 12 min sitten' },
+  { sec: 'later', mode: 'RESERVED', store: 'Kasvis-Deli Lehti', logo: 'KL', what: 'Yllätyskassi', photo: 'lehti', left: 5, rating: '4,7', time: '19:00–20:00', km: '3,2 km' },
+  { sec: 'later', mode: 'RESERVED', store: 'Juuresaitta', logo: 'JA', what: 'Kasviskassi', photo: 'juures', left: 4, rating: '4,3', time: '19:30–20:30', km: '3,8 km' },
+];
+const SECTIONS = [
+  { id: 'now', title: 'Noudettavissa nyt' },
+  { id: 'walk', title: 'Ilman varausta nyt', note: 'Ei varausta – saatavuus epävarma. Tilanne perustuu muiden kerääjien ilmoituksiin.' },
+  { id: 'later', title: 'Myöhemmin tänään' },
+];
+let mode = 'all';
+const card = (o) => `<article class="card">
+  <div class="photo"><img src="photos/${o.photo}.jpg" alt="">
+    ${o.mode === 'RESERVED' ? `<span class="pill left">${o.left} jäljellä</span>` : `<span class="pill left walk">Ei varausta</span>`}
+    <span class="pill right">${STAR}${o.rating}</span>
+    <span class="logo" aria-hidden="true">${o.logo}</span>
+  </div>
+  <div class="body">
+    <div class="title-row"><p class="title">${o.store}</p><button class="heart" aria-pressed="${!!o.fav}" aria-label="Suosikki">${HEART}</button></div>
+    <p class="sub">${o.what}</p>
+    <p class="meta"><span>Nouto tänään ${o.time}</span><i></i><span>${o.km}</span></p>
+    <div class="foot">
+      ${o.mode === 'RESERVED' ? `<span class="mode">${BAG}<b>Varattava</b></span>` : `<span class="mode">${WALK}${o.report}</span>`}
+      <span class="zero">0 €</span>
+    </div>
+  </div>
+</article>`;
+function render() {
+  document.getElementById('sections').innerHTML = SECTIONS.map(s => {
+    const list = OFFERS.filter(o => o.sec === s.id && (mode === 'all' || o.mode === mode));
+    if (!list.length) return '';
+    return `<section class="sec"><div class="sec-head"><h2>${s.title}</h2><a href="#" onclick="return false">Näytä kaikki</a></div>${s.note ? `<p class="sec-note">${s.note}</p>` : ''}<div class="rail">${list.map(card).join('')}</div></section>`;
+  }).join('');
+}
+document.addEventListener('click', (e) => {
+  const seg = e.target.closest('.seg button');
+  if (seg) { mode = seg.dataset.mode; document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', b === seg)); render(); return; }
+  const h = e.target.closest('.heart');
+  if (h) { const on = h.getAttribute('aria-pressed') !== 'true'; h.setAttribute('aria-pressed', on); toast(on ? 'Lisätty suosikkeihin' : 'Poistettu suosikeista'); return; }
+  if (e.target.closest('.card, .nudge button, .icon-btn, .loc-btn, .filter, .tab, .sec-head a')) toast('Tämä esikatselu näyttää vain Löydä-näkymän.');
+});
+let tt; function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('on'), 1800); }
+render();
+</script>
+</body>
+</html>

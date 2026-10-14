@@ -1,0 +1,1 @@
+Photos: flutter/demos veggieseasons/assets/images (BSD-3-Clause, see LICENSE file). Cropped and combined for the Free To Go mockup.
