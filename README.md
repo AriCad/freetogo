@@ -31,3 +31,7 @@ The same codebase must support an optional Too Good To Go-style **paid discounte
 
 ## Future community support (OFF at launch)
 Shops can later donate meals and Christmas food bags **inside Free To Go** through the same merchant-offer → collector-reservation → QR-pickup workflow, with privacy-preserving eligibility. A possible 5-minute head start is **disabled, invisible and backend-enforced OFF by default**. All assistance and campaign UIs are also OFF for the initial mockup. [Community support spec](docs/COMMUNITY_SUPPORT.md). Updated handoff: [Claude master prompt](docs/CLAUDE_MASTER_PROMPT.md).
+
+
+## Future public and targeted channels (targeted OFF by default)
+The giveaway engine has two future-ready **access channels**, independent of whether an offer is reservable and of whether it costs anything: **Avoin** (`public`, everybody eligible, active at launch) and **Kohdennettu** (`targeted`, only pre-approved collectors, disabled and invisible at launch). Approved social support partners (e.g. church diaconal services, food aid NGOs, wellbeing services county social work) can later issue expiring activation codes or minimal profile eligibility grants without Free To Go collecting detailed proof of income. Only approved collectors would see the **Kohdennettu** tag and eligible items. The optional five-minute early-access feature is distinct and still OFF. See [Community Support](docs/COMMUNITY_SUPPORT.md) and [Claude prompt](docs/CLAUDE_MASTER_PROMPT.md).
