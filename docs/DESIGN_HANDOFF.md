@@ -57,3 +57,10 @@ Build the common listing, merchant publishing and booking components without bak
 
 ## Future donation and assistance product extension — NOT part of current mockup
 Read [COMMUNITY_SUPPORT.md](COMMUNITY_SUPPORT.md) and the updated [CLAUDE_MASTER_PROMPT.md](CLAUDE_MASTER_PROMPT.md). Future participating shops can distribute **donated meals and Christmas food bags inside Free To Go** using existing offer/reservation/notification/QR capabilities, perhaps with discreet partner-verified assistance eligibility. The optional five-minute early access is OFF and HIDDEN by default, in backend and UI. The help request and donation campaign tools are similarly OFF/hidden in the current launch design. **Do not display, simulate or design active help/priority/donation screens in the Stage One HTML mockup without new approval**. Only leave typed/domain extension points for later, without confusing current collectors.
+
+
+## Public and Targeted channels (critical UX extension; TARGETED OFF for first prototype)
+The architecture supports `access_channel=PUBLIC|TARGETED` independent from pricing mode, distribution mode or the separate five-minute priority. **Current mockup shows only public offers** and NO reference to "Kohdennettu" at all.
+A future approved, verified-eligible collector will see both normal public offers and their authorized restricted offers in the SAME app. Restricted offer cards/detail use a discreet yet unambiguous **"Kohdennettu"** badge. An unapproved user must not see those offers, badge, menu, notifications or disabled settings. Vetted partners such as church diaconal services, food aid charities and wellbeing services county social work can later issue redeemable codes or profile access grants; do not put income forms in the consumer UX.
+Design only shared component *extension seams*: typed `accessChannel` on offer, optional authorized-only badge state and private entitlement awareness. Leave activation, partner admin, grant claims and visible target UI unimplemented in Stage One. `priority_early_access_enabled=false` continues separately.
+See [COMMUNITY_SUPPORT.md](COMMUNITY_SUPPORT.md).
