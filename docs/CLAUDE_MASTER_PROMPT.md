@@ -79,3 +79,12 @@ ZERO new paid subscriptions/overages. No paid screenshot subscriptions, no unnec
 3. Propose three original visual directions and recommend one.
 4. State Stage One mockup plan and start implementing ONLY that clickable HTML mockup.
 5. Stop for design approval when it is ready.
+
+
+## IMPORTANT LATEST OWNER DECISION — PUBLIC VS TARGETED CHANNEL (FUTURE ONLY)
+Read [COMMUNITY_SUPPORT.md](COMMUNITY_SUPPORT.md) in full. Design future-ready shared data/component architecture around `access_channel: PUBLIC | TARGETED`:
+- **Avoin / PUBLIC**: every collector can see and book/pick up free offers, the default food-waste marketplace.
+- **Kohdennettu / TARGETED**: only individually authorized recipients can see and book specific donated offers, with a visible **"Kohdennettu"** badge ON THE OFFER in eligible collectors' views. Typical verifying partners: church diaconal services, food aid NGOs, and wellbeing-county social work, who can issue an expiring code or private profile grant without requiring users to upload financial documents.
+- Targeted offers and all derived information MUST be server-restricted, never merely visually filtered in the client. Qualified users eventually see public and their approved targeted offers side by side, in the same app. Targeted campaigns can include merchant-given meals and Christmas food bags, handled via the same existing reservation/QR engine.
+- **Do not confuse TARGETED with the optional five-minute PRIORITY feature.** Five-minute priority stays completely disabled/hidden by default. TARGETED ALSO stays disabled/hidden at launch and in Stage One mockup: no tab, listing, badge, menu, setting, code entry, notification, or teaser.
+- Please include these in the FUTURE architecture/type notes only. DO NOT create targeted UI, donation screens or actual partner verification in the first lightweight HTML mockup. Preserve all current free public food flows and cost restrictions.
