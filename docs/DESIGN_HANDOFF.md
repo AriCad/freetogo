@@ -49,3 +49,7 @@ Read PRODUCT_SPEC.md and ARCHITECTURE.md first. All app prices are 0 € at laun
 2. Share these documents with Claude as the authoritative source.
 3. Inspect its proposed screen navigation + visual artifacts, revise until accepted.
 4. Only then authorize functional implementation.
+
+
+## Future paid offers (design-system readiness only)
+Build the common listing, merchant publishing and booking components without baking "free forever" into internal component types. Current public screens must ALL display 0 € and must NOT show a checkout. Keep a future optional paid price display, crossed-out comparison only when justified, optional checkout path, paid order/receipt/refund states, and merchant financial views as unimplemented variants in the navigation specification. Do not spend time designing payment screens until user authorizes paid-market expansion. Preserve existing four food review criteria and merchant trust measures for both future paid and current free pickups.
