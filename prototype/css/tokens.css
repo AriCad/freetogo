@@ -1,0 +1,72 @@
+/* Free To Go — design tokens (provisional palette A "Puolukka")
+   These map 1:1 to the future React Native theme object (see docs/design/NATIVE_MAPPING.md). */
+
+@font-face { font-family: "Bricolage Grotesque"; font-weight: 700; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bricolage Grotesque"; font-weight: 800; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-weight: 400; font-display: swap; src: url("../fonts/figtree-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-weight: 500; font-display: swap; src: url("../fonts/figtree-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-weight: 600; font-display: swap; src: url("../fonts/figtree-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-weight: 700; font-display: swap; src: url("../fonts/figtree-latin-700-normal.woff2") format("woff2"); }
+
+:root {
+  /* Brand */
+  --berry-800: #861238;
+  --berry-700: #9E1645;   /* pressed / text on berry-100 */
+  --berry-600: #C21E56;   /* primary: lingonberry — 5.8:1 on white */
+  --berry-100: #FDE8EF;
+  --berry-50:  #FFF5F8;
+
+  --ink-900: #241A3A;     /* blueberry ink: primary text — 15:1 on bg */
+  --ink-700: #463C5C;
+  --ink-500: #6B6280;     /* secondary text — 5.7:1 on white */
+  --ink-300: #B9B3C6;
+  --ink-200: #DEDAE6;
+  --ink-100: #EEEBF3;
+
+  --saffron-500: #FFB020; /* walk-in / uncertain — ink text 8.9:1 */
+  --saffron-400: #FFC550;
+  --saffron-100: #FFF1D6;
+  --saffron-800: #7A4B00;
+
+  --success-700: #1E7A4C;
+  --success-100: #E3F4EA;
+  --danger-700:  #B42318;
+  --danger-100:  #FDECEA;
+
+  --bg: #F6F4F8;          /* faint heather, not cream */
+  --surface: #FFFFFF;
+  --scrim: rgba(36, 26, 58, .48);
+
+  /* Type */
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-ui: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-xs: 12px;  --lh-xs: 16px;
+  --fs-sm: 14px;  --lh-sm: 20px;
+  --fs-md: 16px;  --lh-md: 24px;
+  --fs-lg: 18px;  --lh-lg: 26px;
+  --fs-xl: 22px;  --lh-xl: 28px;
+  --fs-2xl: 28px; --lh-2xl: 32px;
+  --fs-3xl: 34px; --lh-3xl: 38px;
+
+  /* Spacing (4pt grid) */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px;
+
+  /* Radii — hierarchy, not one radius for everything */
+  --r-sm: 8px;     /* photo labels, small tags */
+  --r-md: 14px;    /* buttons, inputs */
+  --r-lg: 20px;    /* cards */
+  --r-xl: 28px;    /* sheets, phone screens */
+  --r-pill: 999px; /* chips */
+
+  /* Sizes */
+  --tap: 48px;           /* minimum touch target (≥44 required) */
+  --btn-h: 52px;
+  --tabbar-h: 64px;
+  --card-photo-h: 132px;
+
+  --shadow-card: 0 1px 2px rgba(36,26,58,.06), 0 4px 14px rgba(36,26,58,.06);
+  --shadow-float: 0 10px 30px rgba(36,26,58,.18);
+
+  /* The signature pattern: hatched saffron = "no reservation, availability uncertain" */
+  --hatch: repeating-linear-gradient(135deg, var(--saffron-500) 0 9px, var(--saffron-400) 9px 18px);
+}
