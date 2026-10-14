@@ -135,3 +135,17 @@ Full approved future-ready specification: [COMMUNITY_SUPPORT.md](COMMUNITY_SUPPO
 - The optional **five-minute early-access reservation window** is **DISABLED BY DEFAULT AND HIDDEN**, server-side and client-side in all markets. Future activation requires a separate explicit product decision, selected eligible recipients, selected participating shops and quotas, fair unused-stock release after five minutes, abuse safeguards and review.
 - Merchant gifts in kind remain priced 0 €. A future third-party-funded "sponsor a meal" purchase through our app would be a separate legally approved payments/fundraising feature, never turned on by default.
 - Existing mainstream discovery, two giveaway modes and zero-fee launch remain unchanged.
+
+
+## 12. Access channels: Avoin vs Kohdennettu — future-ready, targeted OFF/hidden at launch
+- **Avoin / PUBLIC**: anybody can see and collect subject to the offer's standard reservation/walk-in rules. This is the default food-waste reduction marketplace, analogous to Too Good To Go's broad discovery/collection workflow.
+- **Kohdennettu / TARGETED**: an eligible, logged-in collector may see and reserve merchandise deliberately designated for a need-verified audience. Show a visible **"Kohdennettu"** badge on these offer cards/details **only in the eligible user's UI**. Other users must not see targeted listings, exact inventory, map pins, offer URLs, or alerts, even through direct API requests.
+- In the targeted channel, start with **reserved pickups** (not first-come walk-in) to ensure eligibility and pickup certainty. Reuse the same zero-euro reservation, pickup windows and QR redemption; later decisions may add targeted walk-in.
+- Eligibility can be conferred by approved support partners, such as local church diaconal workers, food aid organizations, and wellbeing services county social workers, using an activation code or scoped, time-limited profile entitlement. No burdensome income-proof upload, self-certification granting automatic scarce-stock access, or public poverty badge.
+- Qualifying users may browse BOTH their eligible targeted listings and the ordinary public listings in the same app. For non-qualified users, Free To Go looks exactly like the public-only app; no disabled Targeted tab or teaser.
+- Targeted-channel eligibility and access-control checks MUST happen server-side for discover/search/maps, direct offer lookup, notification targeting, reservations and pickup verification; a hidden UI flag is insufficient.
+- The shop can create targeted listings only after authorized partner/campaign onboarding in a future rollout. Gift campaigns (meals/Christmas food bags) may be targeted; ordinary surplus listings remain public unless merchant/partner explicitly designates otherwise.
+- **At launch:** `targeted_channel_enabled=false` on server for every market, merchant and user; all offers `access_channel=PUBLIC`. No targeted controls, tags, eligibility screens, offers or notifications in HTML mockup or initial app.
+- **Separate feature:** the optional five-minute early reservation advantage is NOT the targeted channel. `priority_early_access_enabled=false` remains disabled and invisible independently. No automatic early notifications for either feature while off.
+- User privacy: the app should not expose hardship reasons to merchants, other collectors, or public profiles. A targeted badge describes the OFFER rather than labeling a PERSON.
+- Detailed data and design acceptance criteria: [COMMUNITY_SUPPORT.md](COMMUNITY_SUPPORT.md).
