@@ -1,6 +1,6 @@
 # Free To Go
 
-**Status:** approved product specification; implementation has not started.
+**Status:** Stage Two app built on branch `app/stage-two` (on-device demo data, no backend yet). See [apps/mobile/README.md](apps/mobile/README.md) to run it on your phone with Expo Go.
 **Working name:** Free To Go (sometimes referred to as Free2Go). Branding and trademark clearance pending.
 **Launch:** one mobile app for iOS and Android, free for everybody, **food only** in the UI. Underlying system supports future verticals.
 

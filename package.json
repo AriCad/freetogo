@@ -1,0 +1,17 @@
+{
+  "name": "freetogo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "typecheck": "npm run typecheck -ws --if-present",
+    "test": "npm run test -ws --if-present",
+    "qa": "npm run typecheck && npm test && npm run i18n:check --workspace @freetogo/mobile"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@freetogo/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Free To Go domain: offers, reservations, walk-in reports, alert matching and the on-device mock service. Pure TypeScript (no React), so a real backend can implement the same rules server-side.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "5.0.4"
+  }
+}
