@@ -66,3 +66,14 @@ Use schemas/config + validation hooks instead of copying whole screens and servi
 4. Implement data model and robust logic.
 5. Test on devices, especially native camera and push.
 6. Pilot with genuine merchant inventory; use only included tool allowances and minimal cloud builds.
+
+
+## Paid marketplace extension (MUST support in shared engine; NOT implemented now)
+See [PAID_MARKETPLACE_READINESS.md](PAID_MARKETPLACE_READINESS.md). Separate these independent revenues: (1) customer pays for a discounted surplus bag; (2) merchant pays platform subscription; (3) optional consumer access fee. The first is NOT currently active.
+- Do not hard-code offer price or value as zero in generic engine/database. `offer_pricing`: offer_id, price_minor (integer, 0 at launch), currency ISO-4217, pricing_mode FREE/PAID, merchant_receivable and fee policy references added later. Validate that only admins can enable paid markets.
+- `market_configs`: country/region, enabled verticals, paid_offer_enabled false, settlement/tax/legal locales and feature gates. All countries FREE by default; no surprise worldwide switches.
+- `orders` separate from `reservations` or a stable `order` abstraction supporting FREE_CONFIRMED and future PENDING_PAYMENT/PAID/REFUNDED without breaking current records.
+- Future logical records, no operational payment integration now: `payment_intents`, `payment_events`, `refunds`, `merchant_payout_accounts`, `settlement_ledger`, `platform_fees`, `tax_snapshots`. Freeze pricing and legal terms per transaction at purchase time.
+- For paid orders, put bounded inventory holds and idempotent server-side finalize/release around payment; avoid overselling and both charging without stock and confirming without payment. Reconcile provider webhooks and expired holds.
+- Prepare separate price-display/reservation UI components and an optional checkout route. It must be hidden/disabled while paid_offer_enabled=false and must never block FREE offers.
+- Actual financial services and payouts require compliance architecture, supported payment processor, merchant onboarding/KYC, reconciliation, VAT/payment/refund rules, privacy/security and App Store/Google Play policies. Physical-goods transactions generally have different app-store rules than paid digital access.
