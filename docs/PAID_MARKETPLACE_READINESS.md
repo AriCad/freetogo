@@ -51,3 +51,7 @@ Market configuration uses explicit market/country IDs, currencies and flags. Def
 - Per-market flags default to disabled and are server-enforced.
 - Future paid booking flow could be introduced without cloning merchant/location/offer/notification/review systems.
 - No payment gateway, checkout SDK, finance operations or paid API usage introduced at MVP.
+
+
+## Community Support is separate from future payments
+See [COMMUNITY_SUPPORT.md](COMMUNITY_SUPPORT.md). A shop donating food/meal/Christmas food bag inside Free To Go is an **in-kind 0€ app offer**, not a paid purchase. If people later pay to sponsor meals/bags through this same app, payment processing, refunds, receipts and local fundraising regulation need their own future implementation and explicit launch decision. Merchant subscriptions, consumer €0.99 access, paid discounted food bags, shop-given meals, and donor-funded sponsorships are separate modes. All payment and campaign options remain OFF in the MVP.
