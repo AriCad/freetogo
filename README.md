@@ -27,3 +27,7 @@ Validate local food safety, allergen disclosure, operator classification, privac
 
 ## Future paid surplus marketplace (architectural requirement)
 The same codebase must support an optional Too Good To Go-style **paid discounted surplus offer** in selected countries. It is **not enabled or advertised at launch**. Build commerce-neutral offer/reservation domain objects from the outset; payments, refunds and merchant payouts are a future project. See [Paid marketplace readiness](docs/PAID_MARKETPLACE_READINESS.md).
+
+
+## Future community support (OFF at launch)
+Shops can later donate meals and Christmas food bags **inside Free To Go** through the same merchant-offer → collector-reservation → QR-pickup workflow, with privacy-preserving eligibility. A possible 5-minute head start is **disabled, invisible and backend-enforced OFF by default**. All assistance and campaign UIs are also OFF for the initial mockup. [Community support spec](docs/COMMUNITY_SUPPORT.md). Updated handoff: [Claude master prompt](docs/CLAUDE_MASTER_PROMPT.md).
