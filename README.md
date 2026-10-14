@@ -1,0 +1,25 @@
+# Free To Go
+
+**Status:** approved product specification; implementation has not started.
+**Working name:** Free To Go (sometimes referred to as Free2Go). Branding and trademark clearance pending.
+**Launch:** one mobile app for iOS and Android, free for everybody, **food only** in the UI. Underlying system supports future verticals.
+
+## Source of truth
+- [Product specification](docs/PRODUCT_SPEC.md) — agreed consumer/merchant behavior and edge cases.
+- [Architecture and commercialization](docs/ARCHITECTURE.md) — shared multi-vertical model, security, notification and future payment readiness.
+- [Design and Claude handoff](docs/DESIGN_HANDOFF.md) — visual direction, screens, workflow and acceptance criteria.
+
+**Do not begin implementing before the mobile design is reviewed and approved.**
+
+## Principles
+1. Extremely minimalist, fast, cheerful, trustworthy, phone-first; benchmark Too Good To Go's workflow without copying branded assets or exact creative expression.
+2. One app, two roles (collector and merchant); a person may have both.
+3. All listings and pickups cost **0 €** at launch; no ads, paid tiers, checkout or payment processing.
+4. Two distribution modes: reservable bags and no-reservation first-come-first-served giveaways.
+5. Push alerting for followed stores, specific stores, radius around saved location(s), towns/cities — essential from MVP.
+6. Food only visible at launch. Configuration-ready for furniture, plants, construction supplies etc. without creating empty UI.
+7. Future paid merchant access and potential consumer €0.99 acquisition/access fee supported in entitlements/config, **disabled** at launch.
+8. No extra ongoing paid subscriptions/API overages; minimize CI/build/deploy costs; local testing and batched changes.
+
+## Before launch
+Validate local food safety, allergen disclosure, operator classification, privacy, app store policy, store verification, and trademark/brand.
