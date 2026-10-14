@@ -115,3 +115,14 @@ Opt-in settings with toggles:
 - Walk-in evidence / report integrity method, appeals and automated pausing threshold.
 - Notification quiet-hour defaults, radius/city selection experience, map provider and legal disclosures.
 - Operational policy for suspicious goods, safety alerts and real-life out-of-stock reports.
+
+
+## 10. Future paid surplus offers — prepared but disabled
+- A country may eventually enable a Too Good To Go-style discounted paid surplus product while other countries remain fully free. No change to initial food-only, all-free experience.
+- A future paid reserved offer has merchant-specified price, original/reference value where legally substantiated, currency, tax handling, quantity, collection window, payment at checkout, confirmation, redemption, cancellation and refund policies, merchant settlement and fees.
+- Walk-in giveaways remain free; do not turn them into a payment checkout implicitly.
+- UI must support three concepts in domain logic: free reservable, free walk-in, and later paid reservable. In launch UI only first two are visible and price is always 0.
+- Display "0 €" without payment flow for free offers. Paid cards, price filters, payment methods, discount labels, receipts and payment status are introduced only when that market is deliberately enabled and legally ready.
+- Consumer €0.99 access and merchant SaaS fees are **independent** of customers paying for a discounted food bag. Do not conflate the three separate kinds of monetization.
+- Design a future variant of the user flow: discover -> paid offer detail -> checkout -> external payment confirmation -> reservation confirmed -> collect -> rate. Never confirm paid inventory unless the payment/reservation saga completes; use a short expiry hold where needed.
+- Legal approval needed by market for payments, disclosures, consumer cancellation rights, tax, merchant-of-record structure and refunds.
