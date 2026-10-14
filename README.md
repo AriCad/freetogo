@@ -23,3 +23,7 @@
 
 ## Before launch
 Validate local food safety, allergen disclosure, operator classification, privacy, app store policy, store verification, and trademark/brand.
+
+
+## Future paid surplus marketplace (architectural requirement)
+The same codebase must support an optional Too Good To Go-style **paid discounted surplus offer** in selected countries. It is **not enabled or advertised at launch**. Build commerce-neutral offer/reservation domain objects from the outset; payments, refunds and merchant payouts are a future project. See [Paid marketplace readiness](docs/PAID_MARKETPLACE_READINESS.md).
