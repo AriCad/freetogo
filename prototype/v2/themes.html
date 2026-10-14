@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free To Go – teemat 6–10</title>
+<style>
+  @font-face { font-family: "Figtree"; font-weight: 700; src: url("../fonts/figtree-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Figtree"; font-weight: 500; src: url("../fonts/figtree-latin-500-normal.woff2") format("woff2"); }
+  body { margin: 0; font-family: "Figtree", system-ui, sans-serif; background: #EEF1F4; color: #17262E; }
+  .row { display: flex; gap: 24px; padding: 28px 24px; overflow-x: auto; }
+  .col { flex: none; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  h2 { margin: 0; font-size: 22px; }
+  .hex { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 15px; }
+  .hex i { width: 22px; height: 22px; border-radius: 50%; }
+  .frame { box-sizing: border-box; width: 250px; height: 527px; border-radius: 30px; overflow: hidden; background: #1A2328; padding: 6px; }
+  .clip { width: 238px; height: 515px; overflow: hidden; border-radius: 25px; background: #fff; }
+  iframe { width: 390px; height: 844px; border: 0; transform: scale(.6103); transform-origin: 0 0; display: block; }
+  p { margin: 0 24px 24px; font-size: 14px; color: #5E6E77; }
+</style>
+</head>
+<body>
+<div class="row" id="row"></div>
+<p>Sama Löydä-näkymä viidellä teemalla. Vain teematokenit vaihtuvat (prototype/theme/themes.js); rakenne, välistys ja komponentit ovat yhteiset.</p>
+<script src="../theme/themes.js"></script>
+<script>
+document.getElementById('row').innerHTML = Object.entries(FTG.theme.THEMES).map(([id, t]) =>
+  `<div class="col"><h2>Teema ${id} · ${t.name}</h2><div class="hex"><i style="background:${t.primary}"></i>${t.primary}</div><div class="frame"><div class="clip"><iframe src="discover.html?theme=${id}" title="Teema ${id}" loading="eager"></iframe></div></div></div>`).join('');
+</script>
+</body>
+</html>

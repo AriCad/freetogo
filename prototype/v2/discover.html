@@ -10,16 +10,10 @@
 @font-face { font-family: "Figtree"; font-weight: 600; src: url("../fonts/figtree-latin-600-normal.woff2") format("woff2"); }
 @font-face { font-family: "Figtree"; font-weight: 700; src: url("../fonts/figtree-latin-700-normal.woff2") format("woff2"); }
 
-/* v2 tokens — pale blue-teal direction (provisional, awaiting approval) */
+/* Colours come from ../theme/themes.js (themes 6–10). Local aliases keep the stylesheet short. */
 :root {
-  --primary: #8FC1D6;       /* pale blue-teal: brand surfaces, selected states, soft CTA */
-  --primary-tint: #E8F2F7;  /* very light wash of primary */
-  --secondary: #2B6C8C;     /* deep blue-teal: links, active tab, icons, text on light */
-  --bg: #F7FAFB;            /* near-white, slightly cool */
-  --surface: #FFFFFF;
-  --text: #17262E;          /* main text */
-  --muted: #5E6E77;         /* secondary text, 5.3:1 on white */
-  --line: #E3EAEE;
+  --primary-tint: var(--primarySoft); --secondary: var(--active); --bg: var(--background);
+  --text: var(--textPrimary); --muted: var(--textSecondary); --line: var(--border);
   --shadow: 0 1px 2px rgba(23,38,46,.05), 0 6px 18px rgba(23,38,46,.06);
   --font: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -49,28 +43,28 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* Header */
 .loc { display: flex; align-items: center; gap: 10px; padding: 6px 16px 0; }
 .loc-btn { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 0; min-height: 48px; text-align: left; }
-.loc-ic { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--primary-tint); color: var(--secondary); display: grid; place-items: center; }
+.loc-ic { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--primary-tint); color: var(--icon); display: grid; place-items: center; }
 .loc-txt { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; }
 .loc-txt b { font-weight: 700; }
 .loc-txt span { color: var(--muted); }
-.icon-btn { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; color: var(--secondary); position: relative; }
+.icon-btn { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; color: var(--icon); position: relative; }
 .icon-btn .dot { position: absolute; top: 9px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--secondary); border: 2px solid #fff; }
 
 .search-row { display: flex; gap: 10px; padding: 10px 16px 0; }
 .search { flex: 1; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); color: var(--muted); min-width: 0; }
 .search input { border: 0; outline: 0; background: none; flex: 1; min-width: 0; font: inherit; font-size: 15px; color: var(--text); }
 .search input::placeholder { color: var(--muted); }
-.filter { flex: none; width: 46px; height: 46px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; color: var(--secondary); }
+.filter { flex: none; width: 46px; height: 46px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; color: var(--icon); }
 
 .seg { margin: 12px 16px 0; display: grid; grid-template-columns: repeat(3, 1fr); background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 3px; }
 .seg button { border: 0; background: none; height: 38px; border-radius: 11px; font-weight: 600; font-size: 14px; color: var(--muted); }
-.seg button[aria-pressed="true"] { background: var(--primary); color: var(--text); }
+.seg button[aria-pressed="true"] { background: var(--selected); color: var(--onSelected); }
 
 /* Sections */
 .sec { margin-top: 22px; }
 .sec-head { display: flex; align-items: baseline; justify-content: space-between; padding: 0 16px; margin-bottom: 10px; }
 .sec-head h2 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
-.sec-head a { color: var(--secondary); font-weight: 600; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; }
+.sec-head a { color: var(--link); font-weight: 600; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; }
 .sec-note { padding: 0 16px; margin: -4px 0 10px; color: var(--muted); font-size: 13.5px; line-height: 19px; }
 .rail { display: flex; gap: 12px; overflow-x: auto; padding: 2px 16px 10px; scroll-snap-type: x mandatory; scroll-padding: 16px; scrollbar-width: none; }
 .rail::-webkit-scrollbar { display: none; }
@@ -82,30 +76,30 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pill { position: absolute; top: 10px; height: 26px; padding: 0 10px; border-radius: 999px; background: rgba(255,255,255,.96); font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 1px 3px rgba(23,38,46,.12); }
 .pill.left { left: 10px; }
 .pill.right { right: 10px; }
-.pill svg { width: 13px; height: 13px; color: var(--secondary); }
-.pill.walk { background: rgba(255,255,255,.96); border: 1.5px dashed var(--secondary); color: var(--secondary); box-shadow: none; }
-.logo { position: absolute; left: 12px; bottom: -22px; width: 48px; height: 48px; border-radius: 50%; background: #fff; border: 1px solid var(--line); box-shadow: 0 2px 6px rgba(23,38,46,.10); display: grid; place-items: center; font-weight: 700; font-size: 14px; color: var(--secondary); letter-spacing: .02em; }
+.pill svg { width: 13px; height: 13px; color: var(--accent); }
+.pill.walk { background: rgba(255,255,255,.96); border: 1.5px dashed var(--badgeText); color: var(--badgeText); box-shadow: none; }
+.logo { position: absolute; left: 12px; bottom: -22px; width: 48px; height: 48px; border-radius: 50%; background: #fff; border: 1px solid var(--line); box-shadow: 0 2px 6px rgba(23,38,46,.10); display: grid; place-items: center; font-weight: 700; font-size: 14px; color: var(--link); letter-spacing: .02em; }
 .body { padding: 28px 14px 12px; }
 .title-row { display: flex; align-items: center; gap: 8px; }
 .title { flex: 1; min-width: 0; margin: 0; font-size: 16.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .heart { flex: none; width: 40px; height: 40px; margin: -8px -8px -8px 0; border: 0; background: none; display: grid; place-items: center; color: var(--text); }
-.heart[aria-pressed="true"] { color: var(--secondary); }
+.heart[aria-pressed="true"] { color: var(--accent); }
 .heart[aria-pressed="true"] path { fill: currentColor; }
 .sub { margin: 2px 0 0; color: var(--text); font-size: 14px; }
 .meta { margin: 4px 0 0; color: var(--muted); font-size: 14px; display: flex; gap: 8px; white-space: nowrap; }
 .meta i { width: 1px; background: var(--line); }
 .foot { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .mode { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); }
-.mode svg { width: 16px; height: 16px; color: var(--secondary); }
+.mode svg { width: 16px; height: 16px; color: var(--icon); }
 .mode b { color: var(--text); font-weight: 600; }
 .zero { font-size: 18px; font-weight: 700; }
 
 /* Alerts nudge */
 .nudge { margin: 22px 16px 0; display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 16px; background: var(--primary-tint); }
-.nudge .ic { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--surface); color: var(--secondary); display: grid; place-items: center; }
+.nudge .ic { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--surface); color: var(--icon); display: grid; place-items: center; }
 .nudge p { margin: 0; font-size: 14px; line-height: 19px; color: var(--text); }
 .nudge p b { display: block; font-size: 15px; }
-.nudge button { flex: none; border: 0; background: var(--secondary); color: #fff; font-weight: 600; font-size: 14px; height: 40px; padding: 0 14px; border-radius: 999px; }
+.nudge button { flex: none; border: 0; background: var(--active); color: var(--onActive); font-weight: 600; font-size: 14px; height: 40px; padding: 0 14px; border-radius: 999px; }
 
 .demo-note { margin: 18px 16px 24px; color: var(--muted); font-size: 12px; line-height: 17px; text-align: center; }
 
@@ -113,7 +107,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .tabs { flex: none; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); background: var(--surface); padding: 6px 0 22px; }
 .tab { border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 52px; justify-content: center; font-size: 12px; font-weight: 600; color: var(--muted); }
 .tab svg { width: 24px; height: 24px; }
-.tab[aria-current="page"] { color: var(--secondary); }
+.tab[aria-current="page"] { color: var(--active); }
 .toast { position: absolute; left: 16px; right: 16px; bottom: 96px; background: var(--text); color: #fff; border-radius: 14px; padding: 12px 14px; font-size: 14px; opacity: 0; transform: translateY(8px); transition: .2s; pointer-events: none; }
 .toast.on { opacity: 1; transform: none; }
 </style>
@@ -162,7 +156,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
   <div class="toast" role="status" id="toast"></div>
 </div></div></div>
 
+<script src="../theme/themes.js"></script>
 <script>
+// Theme: ?theme=6..10 (comparison board) or the saved setting.
+{ const q = new URLSearchParams(location.search).get('theme'); FTG.theme.apply(FTG.theme.THEMES[q] ? q : FTG.theme.load()); }
 const STAR = '<svg viewBox="0 0 24 24"><path fill="currentColor" d="m12 2.8 2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/></svg>';
 const BAG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>';
 const WALK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="m10 21 2-6 3 3v3M9 11l3-3 3 3 3 1M12 8l-1 7"/></svg>';
