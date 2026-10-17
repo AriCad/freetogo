@@ -8,29 +8,70 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "splash": { "image": "./assets/splash.png", "resizeMode": "contain", "backgroundColor": "#FFFFFF" },
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFFFF"
+    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "fi.freetogo.app",
       "infoPlist": {
         "NSCameraUsageDescription": "Kauppiaat ottavat kameralla tuoreen kuvan tarjolla olevasta ruoasta ja skannaavat noutokoodit.",
-        "NSLocationWhenInUseUsageDescription": "Näytämme lähimmät ilmaiset ruokatarjoukset. Sijaintia ei seurata taustalla."
+        "NSLocationWhenInUseUsageDescription": "N\u00e4yt\u00e4mme l\u00e4himm\u00e4t ilmaiset ruokatarjoukset. Sijaintia ei seurata taustalla."
       }
     },
     "android": {
       "package": "fi.freetogo.app",
-      "adaptiveIcon": { "foregroundImage": "./assets/adaptive-icon.png", "backgroundColor": "#FFFFFF" },
-      "permissions": ["CAMERA", "ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION", "POST_NOTIFICATIONS"]
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "permissions": [
+        "CAMERA",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "POST_NOTIFICATIONS"
+      ],
+      "versionCode": 1
     },
-    "web": { "bundler": "metro", "output": "single", "favicon": "./assets/icon.png" },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/icon.png"
+    },
     "plugins": [
       "expo-router",
       "expo-font",
-      ["expo-camera", { "cameraPermission": "Kauppiaat ottavat kameralla tuoreen kuvan tarjolla olevasta ruoasta ja skannaavat noutokoodit.", "recordAudioAndroid": false }],
-      ["expo-image-picker", { "cameraPermission": "Kauppiaat ottavat kameralla tuoreen kuvan tarjolla olevasta ruoasta.", "photosPermission": false }],
-      ["expo-location", { "locationWhenInUsePermission": "Näytämme lähimmät ilmaiset ruokatarjoukset. Sijaintia ei seurata taustalla." }],
-      ["expo-notifications", { "color": "#6B5FEE" }]
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Kauppiaat ottavat kameralla tuoreen kuvan tarjolla olevasta ruoasta ja skannaavat noutokoodit.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Kauppiaat ottavat kameralla tuoreen kuvan tarjolla olevasta ruoasta.",
+          "photosPermission": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "N\u00e4yt\u00e4mme l\u00e4himm\u00e4t ilmaiset ruokatarjoukset. Sijaintia ei seurata taustalla."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#6B5FEE"
+        }
+      ]
     ],
-    "experiments": { "typedRoutes": false }
+    "experiments": {
+      "typedRoutes": false
+    }
   }
 }

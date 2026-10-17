@@ -2,7 +2,16 @@
 
 React Native + Expo SDK 57 + TypeScript + Expo Router. One app for iOS and Android with collector and merchant roles, built from the approved design (themes 6–10).
 
-## Run it on your phone (free)
+## Install on an Android phone (APK file)
+
+1. On the phone, open **https://github.com/AriCad/freetogo/releases/tag/android-preview** and tap **FreeToGo.apk**
+   (or download it on a computer and copy it to the phone).
+2. Open the downloaded file. Android asks to allow installing apps from this source (browser / file manager) → allow → **Install**.
+3. A newer build installs over the old one; your demo data stays.
+
+The APK is built by GitHub Actions (`.github/workflows/android-apk.yml`) on every push to `app/stage-two`, free for this public repository; no Expo account or secrets are needed. It is a test build signed with the standard debug key, not a Play Store build. iPhones cannot install files like this — use Expo Go below (or TestFlight later, which needs an Apple Developer account).
+
+## Run it with Expo Go (iPhone or Android, free)
 
 1. Install **Expo Go** from the App Store or Google Play.
 2. On your computer (Node 22+):

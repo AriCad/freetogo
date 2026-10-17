@@ -1,0 +1,87 @@
+# Builds an installable Android test APK of Free To Go on GitHub (free for public repositories)
+# and publishes it on the Releases page as "android-preview":
+#   https://github.com/AriCad/freetogo/releases/tag/android-preview
+# No Expo account or secrets are needed. The APK is signed with the standard Expo debug key, so it
+# installs directly on a phone ("install unknown apps"); it is not a Play Store build.
+name: Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [app/stage-two]
+    paths:
+      - 'apps/mobile/**'
+      - 'packages/**'
+      - 'package-lock.json'
+      - '.github/workflows/android-apk.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-apk
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Checks (typecheck, unit tests, locales)
+        run: npm run qa
+
+      - name: Version code = run number (so a new APK installs over the old one)
+        working-directory: apps/mobile
+        run: node -e "const f='app.json',j=require('./'+f);j.expo.android.versionCode=Number(process.env.GITHUB_RUN_NUMBER);require('fs').writeFileSync(f,JSON.stringify(j,null,2))"
+
+      - name: Generate native Android project
+        working-directory: apps/mobile
+        run: npx expo prebuild --platform android --clean --no-install
+        env:
+          EXPO_NO_TELEMETRY: 1
+
+      - name: Build release APK
+        working-directory: apps/mobile/android
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
+        env:
+          NODE_ENV: production
+
+      - name: Collect APK
+        id: apk
+        run: |
+          VERSION=$(node -p "require('./apps/mobile/app.json').expo.version")
+          NAME="FreeToGo-${VERSION}-${GITHUB_RUN_NUMBER}.apk"
+          cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk "$NAME"
+          cp "$NAME" FreeToGo.apk
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          ls -la *.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.apk.outputs.name }}
+          path: ${{ steps.apk.outputs.name }}
+          retention-days: 14
+
+      - name: Publish to the "android-preview" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android-preview --yes --cleanup-tag || true
+          gh release create android-preview FreeToGo.apk "${{ steps.apk.outputs.name }}" \
+            --target "$GITHUB_SHA" \
+            --title "Free To Go – Android-testiversio (${{ steps.apk.outputs.name }})" \
+            --notes "Asenna puhelimeen: lataa **FreeToGo.apk** puhelimella, avaa se ja salli asennus tuntemattomista lähteistä. Demoversio: kuvitteelliset kaupat, tiedot vain laitteella, ei taustapalvelinta. Rakennettu commitista ${GITHUB_SHA::7}."
