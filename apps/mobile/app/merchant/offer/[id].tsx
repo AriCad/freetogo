@@ -6,7 +6,7 @@ import {
   MINUTE, editOffer, extendWalkIn, hhmm, isGone, merchantAllGone, merchantCancel, merchantStillFood, offerById, offerState, stopReservations,
   type MerchantCancelReason,
 } from '@freetogo/core';
-import { Block, Button, Callout, Check, DisabledWhy, Divider, Icon, Pill, Txt, radius, space, useTheme } from '@freetogo/ui';
+import { Block, Button, Callout, Check, DisabledWhy, Divider, ErrorLine, Icon, Pill, Txt, radius, space, useTheme } from '@freetogo/ui';
 import { useStore } from '../../../src/state/AppStore';
 import { Screen } from '../../../src/components/Screen';
 import { Sheet } from '../../../src/components/Sheet';
@@ -21,6 +21,8 @@ export default function MerchantOffer() {
   const [sheet, setSheet] = useState<null | 'edit' | 'cancel' | 'extend'>(null);
   const [reason, setReason] = useState<MerchantCancelReason | null>(null);
   const [confirmFood, setConfirmFood] = useState(false);
+  const [tried, setTried] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
   const o = offerById(state, id ?? '');
   const [qty, setQty] = useState(o?.qtyTotal ?? 1);
   const [end, setEnd] = useState(o ? hhmm(o.end) : '18:00');
@@ -68,7 +70,7 @@ export default function MerchantOffer() {
                   <Txt weight="bold">{t('m_expires_in', { n: Math.max(0, Math.round(((o.expiresAt ?? now) - now) / MINUTE)) })}</Txt>
                   <Txt variant="small" color="textSecondary">{t('m_expiry_note')}</Txt>
                 </View>
-                <Button size="small" kind="secondary" block={false} label={t('m_extend')} onPress={() => { setConfirmFood(false); setSheet('extend'); }} />
+                <Button size="small" kind="secondary" block={false} label={t('m_extend')} onPress={() => { setConfirmFood(false); setTried(false); setSheet('extend'); }} />
               </Block>
             </>
           ) : <Callout icon="check">{st === 'closed' ? t('closed_t') : t('expired_t')}</Callout>}
@@ -104,11 +106,11 @@ export default function MerchantOffer() {
           {!gone ? (
             <>
               <View style={{ flexDirection: 'row', gap: space.s }}>
-                <View style={{ flex: 1 }}><Button kind="secondary" icon="edit" label={t('m_edit')} onPress={() => { setQty(o.qtyTotal ?? 1); setEnd(hhmm(o.end)); setSheet('edit'); }} /></View>
+                <View style={{ flex: 1 }}><Button kind="secondary" icon="edit" label={t('m_edit')} onPress={() => { setQty(o.qtyTotal ?? 1); setEnd(hhmm(o.end)); setEditError(null); setSheet('edit'); }} /></View>
                 <View style={{ flex: 1 }}><Button kind="secondary" label={t('m_stop')} disabled={!o.reservationsOpen} onPress={() => { run((s) => stopReservations(s, o.id)); showToast(t('m_stopped')); }} /></View>
               </View>
               {o.reservationsOpen ? <Txt variant="tiny" color="textSecondary">{t('m_stop_s')}</Txt> : <DisabledWhy text={t('m_stopped')} />}
-              <Button kind="danger" label={t('m_cancel_all')} disabled={!open.length} onPress={() => { setReason(null); setSheet('cancel'); }} />
+              <Button kind="danger" label={t('m_cancel_all')} disabled={!open.length} onPress={() => { setReason(null); setTried(false); setSheet('cancel'); }} />
               {!open.length ? <DisabledWhy text={t('m_scan_none')} /> : null}
             </>
           ) : null}
@@ -126,28 +128,31 @@ export default function MerchantOffer() {
         <Txt weight="bold">{t('m_end')}</Txt>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.l }}>
           <Step icon="minus" onPress={() => { const [h, m] = end.split(':').map(Number); const d = new Date(now); d.setHours(h ?? 0, (m ?? 0) - 15, 0, 0); setEnd(hhmm(d.getTime())); }} />
-          <Txt variant="heading">{end}</Txt>
+          <Txt variant="heading" style={editError ? { color: colors.danger } : undefined}>{end}</Txt>
           <Step icon="plus" onPress={() => { const [h, m] = end.split(':').map(Number); const d = new Date(now); d.setHours(h ?? 0, (m ?? 0) + 15, 0, 0); setEnd(hhmm(d.getTime())); }} />
         </View>
-        <Button label={t('m_save')} onPress={() => { const r = run((s, n) => editOffer(s, o.id, { qtyTotal: qty, end }, n)); if (r.ok) { setSheet(null); showToast(t('m_saved')); } else showToast(r.error === 'need_time' ? t('m_need_time') : t('m_edit_min', { n: reserved })); }} />
+        {editError ? <ErrorLine text={editError} /> : null}
+        <Button label={t('m_save')} onPress={() => { const r = run((s, n) => editOffer(s, o.id, { qtyTotal: qty, end }, n)); if (r.ok) { setSheet(null); showToast(t('m_saved')); } else setEditError(r.error === 'end_before_start' ? t('m_end_before_start') : r.error === 'end_past' ? t('m_end_past') : t('m_edit_min', { n: reserved })); }} />
       </Sheet>
       <Sheet visible={sheet === 'cancel'} title={t('m_cancel_t')} onClose={() => setSheet(null)}>
         <Txt variant="small" color="textSecondary">{t('m_cancel_s')}</Txt>
         <Txt weight="bold">{t('m_cancel_reason')}</Txt>
         {(['out', 'closing', 'other'] as const).map((k) => (
           <Pressable key={k} accessibilityRole="radio" accessibilityState={{ checked: reason === k }} onPress={() => setReason(k)}
-            style={{ flexDirection: 'row', alignItems: 'center', minHeight: 52, paddingHorizontal: space.m, borderRadius: 12, borderWidth: 1.5, borderColor: reason === k ? colors.active : colors.border, backgroundColor: reason === k ? colors.primarySoft : colors.surface }}>
+            style={{ flexDirection: 'row', alignItems: 'center', minHeight: 52, paddingHorizontal: space.m, borderRadius: 12, borderWidth: 1.5, borderColor: reason === k ? colors.active : tried && !reason ? colors.danger : colors.border, backgroundColor: reason === k ? colors.primarySoft : colors.surface }}>
             <Txt weight="semibold" style={{ flex: 1 }}>{t(`mc_${k}`)}</Txt>
             {reason === k ? <Icon name="check" size={20} color="active" /> : null}
           </Pressable>
         ))}
-        <Button label={t('m_cancel_do', { n: open.length })} disabled={!reason} onPress={() => { if (!reason) return; const r = run((s, n) => merchantCancel(s, o.id, reason, n)); setSheet(null); showToast(t('m_cancelled', { n: r.value ?? 0 })); }} />
-        {!reason ? <DisabledWhy text={t('choose_reason')} /> : null}
+        {tried && !reason ? <ErrorLine text={t('choose_reason')} /> : null}
+        <Button label={t('m_cancel_do', { n: open.length })} onPress={() => { if (!reason) { setTried(true); return; } const r = run((s, n) => merchantCancel(s, o.id, reason, n)); setSheet(null); showToast(t('m_cancelled', { n: r.value ?? 0 })); }} />
       </Sheet>
       <Sheet visible={sheet === 'extend'} title={t('m_extend_t')} onClose={() => setSheet(null)}>
-        <Check label={t('m_extend_confirm')} checked={confirmFood} onPress={() => setConfirmFood(!confirmFood)} />
-        <Button label={t('m_extend')} disabled={!confirmFood} onPress={() => { run((s, n) => extendWalkIn(s, o.id, n)); setSheet(null); showToast(t('m_extended')); }} />
-        {!confirmFood ? <DisabledWhy text={t('m_extend_confirm')} /> : null}
+        <View style={tried && !confirmFood ? { borderRadius: 14, borderWidth: 1.5, borderColor: colors.danger, padding: 2 } : undefined}>
+          <Check label={t('m_extend_confirm')} checked={confirmFood} onPress={() => setConfirmFood(!confirmFood)} />
+        </View>
+        {tried && !confirmFood ? <ErrorLine text={t('m_extend_required')} /> : null}
+        <Button label={t('m_extend')} onPress={() => { if (!confirmFood) { setTried(true); return; } run((s, n) => extendWalkIn(s, o.id, n)); setSheet(null); showToast(t('m_extended')); }} />
       </Sheet>
       <Divider />
     </Screen>

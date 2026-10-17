@@ -7,7 +7,7 @@ import {
   isGone, isStaleReport, myActive, offerById, offerState, reportWalkIn, reserve, saveWalkInQuality, storeById, walkSignal,
   type AlertReason, type ReportLevel,
 } from '@freetogo/core';
-import { Block, Button, Callout, DisabledWhy, Icon, Pill, Txt, gutter, radius, space, useTheme, type IconName } from '@freetogo/ui';
+import { Block, Button, Callout, DisabledWhy, ErrorLine, Icon, Pill, Txt, gutter, radius, space, useTheme, type IconName } from '@freetogo/ui';
 import { useStore } from '../../src/state/AppStore';
 import { useActions } from '../../src/state/useActions';
 import { photoSource } from '../../src/photos';
@@ -28,6 +28,7 @@ export default function OfferScreen() {
   const [checking, setChecking] = useState(from === 'alert');
   const [sheet, setSheet] = useState<null | 'confirm' | 'busy' | 'race' | 'gone' | 'safety'>(null);
   const [safetyKind, setSafetyKind] = useState<string | null>(null);
+  const [safetyTried, setSafetyTried] = useState(false);
   const [quality, setQuality] = useState(0);
 
   // Deep link from an alert: recheck availability before showing the offer.
@@ -242,13 +243,14 @@ export default function OfferScreen() {
       <Sheet visible={sheet === 'safety'} title={t('safety_t')} onClose={() => setSheet(null)}>
         <Txt variant="small" color="textSecondary">{t('safety_s')}</Txt>
         {['sf_spoiled', 'sf_allergen', 'sf_other'].map((k) => (
-          <Pressable key={k} accessibilityRole="radio" accessibilityState={{ checked: safetyKind === k }} onPress={() => setSafetyKind(k)} style={[styles.option, { borderColor: safetyKind === k ? colors.active : colors.border, backgroundColor: safetyKind === k ? colors.primarySoft : colors.surface }]}>
+          <Pressable key={k} accessibilityRole="radio" accessibilityState={{ checked: safetyKind === k }} onPress={() => setSafetyKind(k)} style={[styles.option, { borderColor: safetyKind === k ? colors.active : safetyTried && !safetyKind ? colors.danger : colors.border, backgroundColor: safetyKind === k ? colors.primarySoft : colors.surface }]}>
             <Txt weight="semibold" style={{ flex: 1 }}>{t(k)}</Txt>
             {safetyKind === k ? <Icon name="check" size={20} color="active" /> : null}
           </Pressable>
         ))}
         <Callout tone="danger" icon="alert">{t('safety_urgent')}</Callout>
-        <Button label={t('send_report')} disabled={!safetyKind} onPress={() => { setSheet(null); setSafetyKind(null); showToast(t('safety_sent')); }} />
+        {safetyTried && !safetyKind ? <ErrorLine text={t('choose_reason')} /> : null}
+        <Button label={t('send_report')} onPress={() => { if (!safetyKind) { setSafetyTried(true); return; } setSheet(null); setSafetyKind(null); setSafetyTried(false); showToast(t('safety_sent')); }} />
       </Sheet>
     </View>
   );

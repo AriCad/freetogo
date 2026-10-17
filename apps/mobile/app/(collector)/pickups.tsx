@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { cancelReservation, myReservations, offerById, reportNotReceived, storeById, type NotReceivedReason, type Reservation } from '@freetogo/core';
-import { Block, Button, Callout, Icon, Pill, Txt, radius, space, useTheme } from '@freetogo/ui';
+import { Block, Button, Callout, ErrorLine, Icon, Pill, Txt, radius, space, useTheme } from '@freetogo/ui';
 import { useStore } from '../../src/state/AppStore';
 import { Screen } from '../../src/components/Screen';
 import { Sheet } from '../../src/components/Sheet';
@@ -70,6 +70,7 @@ function Ticket({ r }: { r: Reservation }) {
   const [sheet, setSheet] = useState<null | 'cancel' | 'nr' | 'sent'>(null);
   const [reason, setReason] = useState<NotReceivedReason | null>(null);
   const [text, setText] = useState('');
+  const [tried, setTried] = useState(false);
   const o = offerById(state, r.offerId);
   const s = storeById(state, r.storeId);
   if (!o || !s) return null;
@@ -101,13 +102,14 @@ function Ticket({ r }: { r: Reservation }) {
         <Txt color="textSecondary">{t('not_received_s')}</Txt>
         {(['out', 'closed', 'other'] as const).map((k) => (
           <Pressable key={k} accessibilityRole="radio" accessibilityState={{ checked: reason === k }} onPress={() => setReason(k)}
-            style={[styles.option, { borderColor: reason === k ? colors.active : colors.border, backgroundColor: reason === k ? colors.primarySoft : colors.surface }]}>
+            style={[styles.option, { borderColor: reason === k ? colors.active : tried && !reason ? colors.danger : colors.border, backgroundColor: reason === k ? colors.primarySoft : colors.surface }]}>
             <Txt weight="semibold" style={{ flex: 1 }}>{t(`nr_${k}`)}</Txt>
             {reason === k ? <Icon name="check" size={20} color="active" /> : null}
           </Pressable>
         ))}
         {reason === 'other' ? <TextInput value={text} onChangeText={setText} placeholder={t('nr_other_ph')} placeholderTextColor={colors.textSecondary} multiline style={[styles.input, { borderColor: colors.border, color: colors.textPrimary }]} /> : null}
-        <Button label={t('send_report')} disabled={!reason} onPress={() => { if (!reason) return; run((x) => reportNotReceived(x, r.id, reason, text)); setSheet('sent'); }} />
+        {tried && !reason ? <ErrorLine text={t('choose_reason')} /> : null}
+        <Button label={t('send_report')} onPress={() => { if (!reason) { setTried(true); return; } run((x) => reportNotReceived(x, r.id, reason, text)); setSheet('sent'); }} />
       </Sheet>
       <Sheet visible={sheet === 'sent'} title={t('nr_sent_t')} onClose={() => setSheet(null)}>
         <Txt color="textSecondary">{t('nr_sent_s')}</Txt>

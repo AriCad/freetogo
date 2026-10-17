@@ -361,7 +361,6 @@
   "m_need_groups": "Valitse vähintään yksi ruokaryhmä.",
   "m_need_photo": "Ota uusi kuva ennen julkaisua.",
   "m_need_what": "Kerro, mitä on tarjolla.",
-  "m_need_time": "Päättymisajan pitää olla alkamisajan jälkeen ja tulevaisuudessa.",
   "m_auto_notify": "Seuraajille lähtee ilmoitus automaattisesti – sinun ei tarvitse tehdä muuta.",
   "m_published": "Julkaistu!",
   "m_published_in": "Julkaistu {{n}} sekunnissa",
@@ -493,5 +492,10 @@
   "sort_distance": "Etäisyys",
   "sort_title": "Järjestys",
   "show_sold_s": "Näytä loppuunvaratut tarjoukset",
-  "choose_reason": "Valitse ensin syy."
+  "choose_reason": "Valitse ensin syy.",
+  "m_end_before_start": "Päättymisajan pitää olla alkamisajan jälkeen.",
+  "m_end_past": "Päättymisaika on jo mennyt. Valitse myöhempi aika.",
+  "m_fix_errors": "Korjaa punaisella merkityt kohdat.",
+  "rate_missing_row": "Valitse tähdet tälle kohdalle.",
+  "m_extend_required": "Vahvista ensin, että ruokaa on vielä jäljellä."
 }

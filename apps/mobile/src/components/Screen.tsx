@@ -7,8 +7,9 @@ import { Icon, Txt, gutter, space, useTheme } from '@freetogo/ui';
 
 /** Page shell (ported from texttranslator): background, safe areas, optional back/title row and pinned footer. */
 export function Screen({
-  title, back, right, footer, scroll = true, children, contentStyle, pad = true, ...rest
+  title, back, right, footer, scroll = true, children, contentStyle, pad = true, scrollRef, ...rest
 }: {
+  scrollRef?: React.Ref<ScrollView>;
   title?: string;
   back?: boolean;
   right?: React.ReactNode;
@@ -36,7 +37,7 @@ export function Screen({
     <View style={[styles.root, { backgroundColor: colors.surface, paddingTop: insets.top }]}>
       {header}
       {scroll ? (
-        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[pad && styles.content, { paddingBottom: footer ? space.l : insets.bottom + space.xxxl }, contentStyle]} {...rest}>
+        <ScrollView ref={scrollRef} keyboardShouldPersistTaps="handled" contentContainerStyle={[pad && styles.content, { paddingBottom: footer ? space.l : insets.bottom + space.xxxl }, contentStyle]} {...rest}>
           {children}
         </ScrollView>
       ) : (

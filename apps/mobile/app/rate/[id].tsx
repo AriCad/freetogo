@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { rate, storeById, type Scores } from '@freetogo/core';
-import { Block, Button, Callout, DisabledWhy, Txt, space } from '@freetogo/ui';
+import { Block, Button, Callout, ErrorLine, Field, Txt, space } from '@freetogo/ui';
 import { useStore } from '../../src/state/AppStore';
 import { Screen } from '../../src/components/Screen';
 import { StarInput } from '../../src/components/Blocks';
@@ -14,6 +14,7 @@ export default function Rate() {
   const { t } = useTranslation();
   const { state, run, showToast } = useStore();
   const [v, setV] = useState<Scores>({ quality: 0, quantity: 0, variety: 0, smoothness: 0 });
+  const [tried, setTried] = useState(0);
   const r = state.reservations.find((x) => x.id === id);
   const s = r && storeById(state, r.storeId);
   if (!r || !s) return <Screen back><Txt>{t('not_found')}</Txt></Screen>;
@@ -22,7 +23,7 @@ export default function Rate() {
     <Screen
       back
       title={t('rate_title')}
-      footer={<><Button label={t('submit_rating')} disabled={missing} onPress={() => { const res = run((x) => rate(x, r.id, v)); if (res.ok) { showToast(t('rating_thanks')); router.back(); } }} />{missing ? <DisabledWhy text={t('rate_missing')} /> : null}</>}
+      footer={<><Button label={t('submit_rating')} onPress={() => { if (missing) { setTried((n) => n + 1); return; } const res = run((x) => rate(x, r.id, v)); if (res.ok) { showToast(t('rating_thanks')); router.back(); } }} />{tried && missing ? <ErrorLine text={t('rate_missing')} /> : null}</>}
     >
       <View style={{ flexDirection: 'row', gap: space.m, alignItems: 'center' }}>
         <StoreLogo store={s} size={56} />
@@ -31,10 +32,9 @@ export default function Rate() {
       <Txt variant="small" color="textSecondary">{t('rate_s')}</Txt>
       <Block style={{ gap: space.m }}>
         {(['quality', 'quantity', 'variety', 'smoothness'] as const).map((k) => (
-          <View key={k} style={{ gap: 4 }}>
-            <Txt weight="bold">{t(`rate_q_${k}`)}</Txt>
+          <Field key={k} title={t(`rate_q_${k}`)} error={tried && !v[k] ? t('rate_missing_row') : null} shake={tried}>
             <StarInput value={v[k]} onChange={(n) => setV({ ...v, [k]: n })} label={t(`rate_q_${k}`)} />
-          </View>
+          </Field>
         ))}
       </Block>
       <Callout icon="shield">{`${t('reliability')}: ${t('reliability_s', { ok: s.reliability.ok, f: s.reliability.fail })}`}</Callout>

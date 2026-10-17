@@ -154,7 +154,7 @@ export interface Draft {
   photo: Photo | null;
 }
 
-export type DraftError = 'need_groups' | 'need_photo' | 'need_what' | 'need_time' | 'bad_qty';
+export type DraftError = 'need_groups' | 'need_photo' | 'need_what' | 'end_before_start' | 'end_past' | 'bad_qty';
 
 export function validateDraft(d: Draft, now: number): DraftError[] {
   const e: DraftError[] = [];
@@ -165,7 +165,8 @@ export function validateDraft(d: Draft, now: number): DraftError[] {
   // Walk-in needs a fresh photo of the actual goods: example photos are not allowed.
   if (d.mode === 'WALK_IN' && !(d.photo && d.photo.kind === 'current')) e.push('need_photo');
   if (d.mode === 'WALK_IN' && !d.what.trim()) e.push('need_what');
-  if (!(end > start && end > now)) e.push('need_time');
+  if (end <= start) e.push('end_before_start');
+  else if (end <= now) e.push('end_past');
   if (d.categories.some((c) => !CATEGORIES.includes(c))) e.push('need_groups');
   return e;
 }
@@ -231,7 +232,8 @@ export function editOffer(state: AppState, id: string, patch: { qtyTotal?: numbe
   }
   if (patch.end) {
     const end = atTime(now, patch.end);
-    if (end <= o.start || end <= now) return fail(state, 'need_time');
+    if (end <= o.start) return fail(state, 'end_before_start');
+    if (end <= now) return fail(state, 'end_past');
     o.end = end;
   }
   return ok(s);

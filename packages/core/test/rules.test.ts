@@ -94,7 +94,9 @@ describe('merchant', () => {
     expect(validateDraft(draft(), NOW)).toEqual([]);
     expect(validateDraft(draft({ categories: [] }), NOW)).toContain('need_groups');
     expect(validateDraft(draft({ qty: 2.5 }), NOW)).toContain('bad_qty');
-    expect(validateDraft(draft({ end: hhmm(m(-5)) }), NOW)).toContain('need_time');
+    expect(validateDraft(draft({ end: hhmm(m(-5)) }), NOW)).toContain('end_before_start');
+    expect(validateDraft(draft({ start: hhmm(m(-60)), end: hhmm(m(-5)) }), NOW)).toEqual(['end_past']);
+    expect(validateDraft(draft({ mode: 'WALK_IN', categories: [], what: '', start: hhmm(m(30)), end: hhmm(m(10)) }), NOW)).toEqual(['need_photo', 'need_what', 'end_before_start']);
     const walk = draft({ mode: 'WALK_IN', categories: [], what: 'Banaaneja' });
     expect(validateDraft(walk, NOW)).toContain('need_photo');
     expect(validateDraft({ ...walk, photo: { kind: 'example', asset: 'aurinko' } }, NOW)).toContain('need_photo');

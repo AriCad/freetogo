@@ -30,12 +30,12 @@ export function statusLabel(t: (k: string) => string, st: OfferState): string | 
 }
 
 /** Offer card (approved v2 anatomy). `width` set → rail card; otherwise full width. */
-export function OfferCard({ offer, store, width, compact }: { offer: Offer; store: Store; width?: number; compact?: boolean }) {
+export function OfferCard({ offer, store, width, compact, preview }: { offer: Offer; store: Store; width?: number; compact?: boolean; preview?: boolean }) {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const { state, now } = useStore();
   const { toggleFav } = useActions();
-  const st = offerState(offer, now);
+  const st: OfferState = preview ? 'active' : offerState(offer, now);
   const walk = offer.distributionMode === 'WALK_IN';
   const fav = state.favorites.includes(store.id);
   const status = statusLabel(t, st);

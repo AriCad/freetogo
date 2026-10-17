@@ -18,7 +18,7 @@
       "bundleIdentifier": "fi.freetogo.app",
       "infoPlist": {
         "NSCameraUsageDescription": "Kauppiaat ottavat kameralla tuoreen kuvan tarjolla olevasta ruoasta ja skannaavat noutokoodit.",
-        "NSLocationWhenInUseUsageDescription": "N\u00e4yt\u00e4mme l\u00e4himm\u00e4t ilmaiset ruokatarjoukset. Sijaintia ei seurata taustalla."
+        "NSLocationWhenInUseUsageDescription": "Näytämme lähimmät ilmaiset ruokatarjoukset. Sijaintia ei seurata taustalla."
       }
     },
     "android": {
@@ -60,7 +60,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "N\u00e4yt\u00e4mme l\u00e4himm\u00e4t ilmaiset ruokatarjoukset. Sijaintia ei seurata taustalla."
+          "locationWhenInUsePermission": "Näytämme lähimmät ilmaiset ruokatarjoukset. Sijaintia ei seurata taustalla."
         }
       ],
       [
@@ -68,10 +68,12 @@
         {
           "color": "#6B5FEE"
         }
-      ]
+      ],
+      "./plugins/withLightAppearance"
     ],
     "experiments": {
       "typedRoutes": false
-    }
+    },
+    "backgroundColor": "#FFFFFF"
   }
 }

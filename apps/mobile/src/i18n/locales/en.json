@@ -361,7 +361,6 @@
   "m_need_groups": "Select at least one food group.",
   "m_need_photo": "Take a new photo before publishing.",
   "m_need_what": "Say what’s on offer.",
-  "m_need_time": "End time must be after the start time and in the future.",
   "m_auto_notify": "Followers are notified automatically – nothing else to do.",
   "m_published": "Published!",
   "m_published_in": "Published in {{n}} seconds",
@@ -493,5 +492,10 @@
   "sort_distance": "Distance",
   "sort_title": "Sort",
   "show_sold_s": "Show fully reserved offers",
-  "choose_reason": "Choose a reason first."
+  "choose_reason": "Choose a reason first.",
+  "m_end_before_start": "The end time must be after the start time.",
+  "m_end_past": "The end time has already passed. Choose a later time.",
+  "m_fix_errors": "Fix the items marked in red.",
+  "rate_missing_row": "Choose stars for this item.",
+  "m_extend_required": "First confirm that there is still food left."
 }
