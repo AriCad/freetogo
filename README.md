@@ -1,5 +1,7 @@
 # Free To Go
 
+> 🚨 **MUISTA KEHITYSTÄ JATKETTAESSA — UUSI SUUNNITELTU OMINAISUUS (24.10.2026):** Free To Go -sovellukseen halutaan myöhemmin **oma yksityishenkilöiden tavaralahjoitusten puoli**. Ihmiset voivat ilmoittaa **vaatteita, leluja ja kaikenlaisia muita tavaroita ilmaiseksi noudettavaksi**. Tämä on tärkeä tuleva tuotesuunta; **ei vielä toteuteta eikä muuteta ruoka-MVP:n julkaisulaajuutta**. Katso **[YKSITYISHENKILÖIDEN TAVARAT — TÄRKEÄ SUUNNITELMA](docs/PRIVATE_PERSON_GIVEAWAYS.md)** ennen arkkitehtuuri-, rooli- ja käyttöliittymäpäätöksiä.
+
 **Status:** approved product specification; implementation has not started.
 **Working name:** Free To Go (sometimes referred to as Free2Go). Branding and trademark clearance pending.
 **Launch:** one mobile app for iOS and Android, free for everybody, **food only** in the UI. Underlying system supports future verticals.
